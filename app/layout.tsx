@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { JetBrains_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
+import { Cursor } from "@/components/Cursor";
+import { BackgroundFX } from "@/components/BackgroundFX";
 
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
@@ -42,9 +44,11 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${jetbrainsMono.variable} ${spaceGrotesk.variable}`}
+      className={`${jetbrainsMono.variable} ${spaceGrotesk.variable} bg-black`}
     >
-      <body className="font-sans antialiased bg-bg text-[var(--text)]">
+      <body className="font-sans antialiased bg-black text-[var(--text)]">
+        <BackgroundFX />
+        <Cursor />
         {children}
       </body>
     </html>

@@ -8,12 +8,21 @@ export function Cursor() {
   const [ringPos, setRingPos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [trail, setTrail] = useState<{ x: number; y: number; id: number }[]>([]);
   const ringRef = useRef({ x: 0, y: 0 });
+  const trailId = useRef(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
       setMousePos({ x: e.clientX, y: e.clientY });
       setIsVisible(true);
+      
+      // Add trail point
+      trailId.current += 1;
+      setTrail(prev => [
+        ...prev.slice(-8),
+        { x: e.clientX, y: e.clientY, id: trailId.current }
+      ]);
     };
 
     const handleMouseEnter = () => setIsVisible(true);
@@ -45,8 +54,8 @@ export function Cursor() {
   // Lerp ring position
   useEffect(() => {
     const animate = () => {
-      ringRef.current.x += (mousePos.x - ringRef.current.x) * 0.15;
-      ringRef.current.y += (mousePos.y - ringRef.current.y) * 0.15;
+      ringRef.current.x += (mousePos.x - ringRef.current.x) * 0.12;
+      ringRef.current.y += (mousePos.y - ringRef.current.y) * 0.12;
       setRingPos({ x: ringRef.current.x, y: ringRef.current.y });
       requestAnimationFrame(animate);
     };
@@ -54,48 +63,95 @@ export function Cursor() {
     return () => cancelAnimationFrame(animationId);
   }, [mousePos]);
 
+  // Clean up old trail points
+  useEffect(() => {
+    const cleanup = setInterval(() => {
+      setTrail(prev => prev.slice(-6));
+    }, 100);
+    return () => clearInterval(cleanup);
+  }, []);
+
   if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
     return null;
   }
 
   return (
     <>
-      {/* Dot */}
+      {/* Trail effect */}
+      {trail.map((point, i) => (
+        <motion.div
+          key={point.id}
+          className="fixed pointer-events-none z-[9996]"
+          style={{
+            left: point.x - 2,
+            top: point.y - 2,
+            width: 4,
+            height: 4,
+            backgroundColor: "var(--accent)",
+            borderRadius: "50%",
+          }}
+          initial={{ opacity: 0.4, scale: 1 }}
+          animate={{ opacity: 0, scale: 0 }}
+          transition={{ duration: 0.4, delay: i * 0.02 }}
+        />
+      ))}
+
+      {/* Inner dot */}
       <motion.div
         className="fixed pointer-events-none z-[9999]"
         style={{
-          left: mousePos.x - 4,
-          top: mousePos.y - 4,
-          width: 8,
-          height: 8,
-          backgroundColor: "var(--blue)",
+          left: mousePos.x - 3,
+          top: mousePos.y - 3,
+          width: 6,
+          height: 6,
+          backgroundColor: "var(--accent)",
           borderRadius: "50%",
-          mixBlendMode: "screen",
+          boxShadow: "0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow)",
         }}
         animate={{
-          scale: isHovering ? 1.5 : 1,
+          scale: isHovering ? 2 : 1,
           opacity: isVisible ? 1 : 0,
         }}
-        transition={{ duration: 0.1 }}
+        transition={{ duration: 0.15 }}
       />
 
-      {/* Ring */}
+      {/* Outer ring */}
       <motion.div
         className="fixed pointer-events-none z-[9998]"
         style={{
-          left: ringPos.x - 14,
-          top: ringPos.y - 14,
-          width: 28,
-          height: 28,
-          border: "1px solid var(--blue)",
+          left: ringPos.x - 16,
+          top: ringPos.y - 16,
+          width: 32,
+          height: 32,
+          border: "1.5px solid var(--accent)",
           borderRadius: "50%",
+          backgroundColor: isHovering ? "var(--accent-dim)" : "transparent",
         }}
         animate={{
-          scale: isHovering ? 1.8 : 1,
-          opacity: isVisible ? 0.5 : 0,
+          scale: isHovering ? 1.5 : 1,
+          opacity: isVisible ? 0.6 : 0,
         }}
         transition={{ duration: 0.2 }}
       />
+
+      {/* Hover glow */}
+      {isHovering && (
+        <motion.div
+          className="fixed pointer-events-none z-[9997]"
+          style={{
+            left: ringPos.x - 30,
+            top: ringPos.y - 30,
+            width: 60,
+            height: 60,
+            background: "radial-gradient(circle, var(--accent-glow) 0%, transparent 70%)",
+            borderRadius: "50%",
+          }}
+          initial={{ opacity: 0, scale: 0.8 }}
+          animate={{ opacity: 0.5, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.8 }}
+          transition={{ duration: 0.2 }}
+        />
+      )}
     </>
   );
 }
