@@ -1,0 +1,406 @@
+@import "tailwindcss";
+
+:root {
+  --bg: #000000;
+  --bg2: #090909;
+  --bg3: #111111;
+  --border: #333333;
+  --text: #ffffff;
+  --text-muted: #666666;
+  --strip: 56px;
+  --font-mono: "JetBrains Mono", monospace;
+  --font-sans: "Space Grotesk", sans-serif;
+}
+
+/* ----------------------------------------- */
+/* BASE STYLES & CURSOR                      */
+/* ----------------------------------------- */
+
+/* Force persistent crosshair cursor everywhere */
+*,
+*::before,
+*::after {
+  cursor: crosshair !important;
+}
+
+/* Slightly different crosshair for clickable elements */
+a, button, [role="button"], input[type="submit"] {
+  cursor: cell !important; 
+}
+
+html {
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+::selection {
+  background-color: var(--text);
+  color: var(--bg);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* Brutalist Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--bg3);
+  border-radius: 0;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--text);
+}
+
+/* ----------------------------------------- */
+/* 1. STRUCTURAL SPUNK (Backgrounds & Grids) */
+/* ----------------------------------------- */
+
+/* Hazard Stripes (Hard stops, no fading) */
+.hazard-stripes {
+  background: repeating-linear-gradient(
+    -45deg,
+    var(--bg),
+    var(--bg) 10px,
+    var(--border) 10px,
+    var(--border) 20px
+  );
+}
+
+/* CRT Scanline Overlay (Harsh 1px lines) */
+.scanline-mesh {
+  background-image: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(255, 255, 255, 0.05) 2px,
+    rgba(255, 255, 255, 0.05) 3px
+  );
+  pointer-events: none;
+}
+
+/* Industrial Dot Grid */
+.industrial-grid {
+  background-image: radial-gradient(var(--border) 1px, transparent 1px);
+  background-size: 24px 24px;
+}
+
+/* Marquee Ticker Tape */
+@keyframes ticker {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(-50%); }
+}
+
+.ticker-tape {
+  display: flex;
+  width: 200%;
+  border-top: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  background: var(--bg2);
+  animation: ticker 10s linear infinite;
+}
+
+/* ----------------------------------------- */
+/* 2. UNIQUE UI ELEMENTS                     */
+/* ----------------------------------------- */
+
+/* Targeting Crosshair Frame */
+.ui-frame {
+  position: relative;
+  padding: 1rem;
+}
+
+.ui-frame::before,
+.ui-frame::after {
+  content: "";
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+}
+
+.ui-frame::before {
+  background: 
+    linear-gradient(to right, var(--text) 2px, transparent 2px) 0 0,
+    linear-gradient(to bottom, var(--text) 2px, transparent 2px) 0 0,
+    linear-gradient(to left, var(--text) 2px, transparent 2px) 100% 100%,
+    linear-gradient(to top, var(--text) 2px, transparent 2px) 100% 100%;
+  background-size: 12px 12px;
+  background-repeat: no-repeat;
+}
+
+.ui-frame::after {
+  background: 
+    linear-gradient(to left, var(--text) 2px, transparent 2px) 100% 0,
+    linear-gradient(to bottom, var(--text) 2px, transparent 2px) 100% 0,
+    linear-gradient(to right, var(--text) 2px, transparent 2px) 0 100%,
+    linear-gradient(to top, var(--text) 2px, transparent 2px) 0 100%;
+  background-size: 12px 12px;
+  background-repeat: no-repeat;
+}
+
+/* Pure CSS Barcode Generator */
+.css-barcode {
+  height: 40px;
+  width: 100%;
+  background-image: repeating-linear-gradient(
+    to right,
+    var(--text) 0,
+    var(--text) 2px,
+    transparent 2px,
+    transparent 5px,
+    var(--text) 5px,
+    var(--text) 6px,
+    transparent 6px,
+    transparent 10px,
+    var(--text) 10px,
+    var(--text) 14px,
+    transparent 14px,
+    transparent 16px
+  );
+}
+
+/* ----------------------------------------- */
+/* 3. SIDEBAR & NAVIGATION STYLES            */
+/* ----------------------------------------- */
+
+/* Sharp Blink */
+@keyframes sharpBlink {
+  0%, 49% { opacity: 1; }
+  50%, 99% { opacity: 0; }
+  100% { opacity: 1; }
+}
+
+.blink-hard {
+  animation: sharpBlink 1s step-end infinite;
+}
+
+/* Fixed Sidebar Link */
+.nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  padding: 0.75rem 1rem;
+  color: var(--text-muted);
+  border-left: 4px solid transparent;
+  transition: background-color 0s step-end, color 0s step-end;
+  text-decoration: none;
+}
+
+.nav-link:hover {
+  color: var(--text);
+  background-color: var(--bg2);
+  border-left: 4px solid var(--border);
+}
+
+.nav-link.active,
+.nav-link[aria-current="page"] {
+  color: var(--bg);
+  background-color: var(--text);
+  border-left: 4px solid var(--text);
+  font-weight: bold;
+}
+
+.nav-link.active::before,
+.nav-link[aria-current="page"]::before {
+  content: ">";
+  margin-right: 0.5rem;
+  font-family: var(--font-mono);
+  font-weight: bold;
+  animation: sharpBlink 1s step-end infinite;
+}
+
+/* ----------------------------------------- */
+/* 4. INTERACTIVE SPUNK (Hover & Clicks)     */
+/* ----------------------------------------- */
+
+/* Hard Drop Shadow */
+.hard-shadow {
+  border: 1px solid var(--border);
+  transition: transform 0.1s step-end, box-shadow 0.1s step-end;
+}
+
+.hard-shadow:hover {
+  transform: translate(-4px, -4px);
+  box-shadow: 4px 4px 0 var(--text);
+  border-color: var(--text);
+}
+
+/* Stark Inversion */
+.stark-invert {
+  background-color: transparent;
+  color: var(--text);
+  border: 1px solid var(--text);
+  transition: background-color 0.1s ease, color 0.1s ease;
+}
+
+.stark-invert:hover {
+  background-color: var(--text);
+  color: var(--bg);
+}
+
+/* Redacted Text */
+.text-redacted {
+  background-color: var(--text);
+  color: var(--text);
+  padding: 0 4px;
+  transition: background-color 0s step-end, color 0s step-end;
+  cursor: help !important;
+}
+
+.text-redacted:hover {
+  background-color: transparent;
+  color: var(--text);
+}
+
+/* Mechanical Button Press */
+.mech-btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-mono);
+  text-transform: uppercase;
+  background: var(--bg);
+  color: var(--text);
+  border: 2px solid var(--text);
+  box-shadow: 6px 6px 0 var(--border);
+  transition: all 0.05s linear;
+}
+
+.mech-btn:hover {
+  box-shadow: 8px 8px 0 var(--text-muted);
+  transform: translate(-2px, -2px);
+}
+
+.mech-btn:active {
+  box-shadow: 0 0 0 var(--text);
+  transform: translate(6px, 6px);
+  background: var(--text);
+  color: var(--bg);
+}
+
+/* Slashed Reveal */
+.slash-reveal {
+  position: relative;
+  overflow: hidden;
+}
+
+.slash-reveal::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 50%;
+  height: 100%;
+  background: var(--text);
+  transform: skewX(-45deg);
+  transition: left 0.3s cubic-bezier(0.19, 1, 0.22, 1);
+  mix-blend-mode: difference;
+  z-index: 10;
+  pointer-events: none;
+}
+
+.slash-reveal:hover::before {
+  left: 150%;
+}
+
+/* ----------------------------------------- */
+/* 5. TYPOGRAPHY KINETICS                    */
+/* ----------------------------------------- */
+
+/* Wireframe Text Fill */
+.text-wireframe {
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text-muted);
+  transition: color 0.2s ease, -webkit-text-stroke 0.2s ease;
+}
+
+.text-wireframe:hover {
+  color: var(--text);
+  -webkit-text-stroke: 1px var(--text);
+}
+
+/* Stepped Text Fill */
+.text-step-fill {
+  position: relative;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--text);
+}
+
+.text-step-fill::before {
+  content: attr(data-text);
+  position: absolute;
+  left: 0;
+  top: 0;
+  color: var(--text);
+  overflow: hidden;
+  white-space: nowrap;
+  width: 0%;
+  transition: width 0.3s steps(5, end);
+}
+
+.text-step-fill:hover::before {
+  width: 100%;
+}
+
+/* Glitch Text Effect */
+.glitch-hover {
+  position: relative;
+}
+
+.glitch-hover:hover::before,
+.glitch-hover:hover::after {
+  content: attr(data-text);
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg);
+}
+
+.glitch-hover:hover::before {
+  left: 2px;
+  text-shadow: -1px 0 var(--text-muted);
+  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+  animation: glitch-anim 0.2s step-end infinite alternate-reverse;
+}
+
+.glitch-hover:hover::after {
+  left: -2px;
+  text-shadow: 1px 0 var(--text);
+  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
+  animation: glitch-anim 0.3s step-end infinite alternate-reverse;
+}
+
+@keyframes glitch-anim {
+  0% { transform: translate(0); }
+  20% { transform: translate(-2px, 1px); }
+  40% { transform: translate(-1px, -1px); }
+  60% { transform: translate(2px, 1px); }
+  80% { transform: translate(1px, -1px); }
+  100% { transform: translate(0); }
+}
