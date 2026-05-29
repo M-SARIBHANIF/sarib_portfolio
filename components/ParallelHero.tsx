@@ -38,33 +38,33 @@ export function ParallelHero() {
   }, [charIndex, isDeleting, roleIndex]);
 
   return (
-    <div className="h-full flex flex-col justify-between py-16 px-12 border-r border-[var(--border)]">
+    <div className="h-full flex flex-col justify-between py-20 px-16">
       {/* Top Section */}
       <div className="flex flex-col">
         {/* Code comment header */}
-        <p className="font-mono text-xs text-[var(--text-muted)] mb-8 tracking-wider opacity-70">
+        <p className="font-mono text-xs text-[var(--text-muted)] mb-6 tracking-wider opacity-70">
           <span className="text-[var(--cyan)]">&gt;_</span> /sarib _
         </p>
 
         {/* Name */}
-        <h1 className="text-5xl font-bold text-[var(--text)] leading-tight mb-4">
+        <h1 className="text-5xl font-bold text-[var(--text)] leading-tight mb-3">
           Muhammad<br />
           Sarib Hanif
         </h1>
 
         {/* Role with blinking cursor */}
-        <div className="font-mono text-sm text-[var(--cyan)] mb-6 h-6 flex items-center border-b border-[var(--cyan)] pb-1 w-fit">
+        <div className="font-mono text-sm text-[var(--cyan)] mb-8 h-6 flex items-center border-b border-[var(--cyan)] pb-1 w-fit">
           {roleText}
           <span className="inline-block w-px h-4 bg-[var(--cyan)] ml-0.5 animate-pulse" />
         </div>
 
         {/* Description */}
-        <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-4 max-w-sm opacity-80">
+        <p className="text-sm text-[var(--text-muted)] leading-relaxed mb-3 max-w-sm opacity-80">
           Building scalable apps and efficient APIs. Clean code, real systems.
         </p>
 
         {/* Comment */}
-        <p className="font-mono text-xs text-[var(--text-muted)] mb-10 opacity-50">
+        <p className="font-mono text-xs text-[var(--text-muted)] mb-8 opacity-50">
           // available for hire
         </p>
 
@@ -80,7 +80,7 @@ export function ParallelHero() {
         </a>
 
         {/* Divider */}
-        <div className="w-12 h-px bg-[var(--cyan)] mb-10 opacity-40" />
+        <div className="w-12 h-px bg-[var(--cyan)] mb-8 opacity-40" />
 
         {/* Social Links */}
         <div className="flex gap-6">
@@ -119,7 +119,7 @@ export function ParallelHero() {
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex flex-col gap-3">
+      <nav className="flex flex-col gap-2">
         {[
           { id: "about", label: "ABOUT" },
           { id: "skills", label: "SKILLS" },
@@ -131,9 +131,12 @@ export function ParallelHero() {
           <a
             key={id}
             href={`#${id}`}
-            className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--cyan)] hover:border-l-2 hover:border-[var(--cyan)] hover:pl-2 transition-all py-1"
+            className="flex items-center gap-3 group py-1.5"
           >
-            {label}
+            <span className="h-px w-4 bg-[var(--text-muted)] group-hover:bg-[var(--cyan)] transition-colors opacity-60 group-hover:opacity-100" />
+            <span className="text-xs font-mono text-[var(--text-muted)] group-hover:text-[var(--cyan)] transition-colors opacity-70 group-hover:opacity-100">
+              {label}
+            </span>
           </a>
         ))}
       </nav>

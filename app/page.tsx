@@ -27,7 +27,7 @@ export default function Home() {
       <div className="flex">
         {/* Left Column: Sticky Hero Info */}
         {!isMobile && (
-          <div className="fixed left-0 top-0 w-1/2 h-screen overflow-y-auto border-r border-[var(--border)]">
+          <div className="fixed left-0 top-0 w-1/2 h-screen overflow-y-auto">
             <ParallelHero />
           </div>
         )}
