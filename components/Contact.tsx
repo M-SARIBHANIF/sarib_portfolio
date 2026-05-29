@@ -155,7 +155,7 @@ export function Contact() {
 
           {/* Terminal Code Block */}
           <motion.div
-            className="terminal-window max-w-xl mb-8"
+            className="terminal-window max-w-md mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
@@ -166,8 +166,8 @@ export function Contact() {
               <div className="terminal-dot green" />
               <span className="terminal-title">contact.ts</span>
             </div>
-            <div className="terminal-body">
-              <pre className="text-sm leading-relaxed">
+            <div className="terminal-body p-4">
+              <pre className="text-xs leading-relaxed whitespace-pre-wrap">
                 <span className="text-[var(--purple)]">const</span>{" "}
                 <span className="text-[var(--text)]">developer</span>{" "}
                 <span className="text-[var(--text3)]">=</span>{" "}
