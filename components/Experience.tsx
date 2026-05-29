@@ -8,15 +8,16 @@ const experiences = [
   {
     company: "CYMAX TECH",
     role: "Full Stack Developer",
-    period: "Oct 2024 - Present",
+    period: "OCT 2024 — PRESENT",
     startDate: new Date("2024-10-01"),
     current: true,
-    color: "green",
+    url: "#",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
-        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" />
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
       </svg>
     ),
+    color: "cyan",
     description: [
       "Led development of enterprise-grade web applications using React and Node.js",
       "Implemented microservices architecture improving system scalability by 40%",
@@ -24,68 +25,46 @@ const experiences = [
       "Mentored junior developers on best practices and code review standards",
     ],
     technologies: ["React", "Node.js", "Docker", "PostgreSQL", "AWS"],
-    achievements: [
-      { metric: "40%", label: "Scalability Increase" },
-      { metric: "60%", label: "Faster Deployments" },
-    ],
   },
   {
     company: "Horizon Tech Services",
     role: "Backend Developer",
-    period: "Aug 2024 - Sep 2024",
+    period: "AUG 2024 — SEP 2024",
     current: false,
-    color: "purple",
+    url: "#",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
-        <rect x="2" y="2" width="20" height="8" rx="2" />
-        <rect x="2" y="14" width="20" height="8" rx="2" />
-        <circle cx="6" cy="6" r="1" fill="currentColor" />
-        <circle cx="6" cy="18" r="1" fill="currentColor" />
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
       </svg>
     ),
+    color: "blue",
     description: [
       "Developed RESTful APIs for client applications using FastAPI",
       "Optimized database queries improving response times by 75%",
       "Implemented authentication and authorization systems",
     ],
     technologies: ["FastAPI", "Python", "MongoDB", "Redis"],
-    achievements: [
-      { metric: "75%", label: "Faster Queries" },
-    ],
   },
   {
     company: "LCC Pakistan",
     role: "Junior Developer",
-    period: "Jun 2023 - Sep 2023",
+    period: "JUN 2023 — SEP 2023",
     current: false,
-    color: "blue",
+    url: "#",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
-        <rect x="2" y="3" width="20" height="14" rx="2" />
-        <path d="M8 21h8M12 17v4" />
+      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
+        <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
       </svg>
     ),
+    color: "green",
     description: [
       "Built responsive web interfaces using React and Tailwind CSS",
       "Collaborated with cross-functional teams on project delivery",
       "Participated in agile development processes and sprint planning",
     ],
     technologies: ["React", "JavaScript", "Tailwind CSS", "Git"],
-    achievements: [],
   },
 ];
-
-const getColorClasses = (color: string) => {
-  const colors: Record<string, { bg: string; text: string; glow: string; border: string; dim: string }> = {
-    blue: { bg: "bg-[var(--blue)]", text: "text-[var(--blue)]", glow: "glow-blue", border: "border-[var(--blue)]", dim: "bg-[var(--blue-dim)]" },
-    green: { bg: "bg-[var(--green)]", text: "text-[var(--green)]", glow: "glow-green", border: "border-[var(--green)]", dim: "bg-[var(--green-dim)]" },
-    purple: { bg: "bg-[var(--purple)]", text: "text-[var(--purple)]", glow: "glow-purple", border: "border-[var(--purple)]", dim: "bg-[var(--purple-dim)]" },
-    cyan: { bg: "bg-[var(--cyan)]", text: "text-[var(--cyan)]", glow: "glow-cyan", border: "border-[var(--cyan)]", dim: "bg-[var(--cyan-dim)]" },
-    amber: { bg: "bg-[var(--amber)]", text: "text-[var(--amber)]", glow: "glow-amber", border: "border-[var(--amber)]", dim: "bg-[var(--amber-dim)]" },
-    pink: { bg: "bg-[var(--pink)]", text: "text-[var(--pink)]", glow: "glow-pink", border: "border-[var(--pink)]", dim: "bg-[var(--pink-dim)]" },
-  };
-  return colors[color] || colors.blue;
-};
 
 function TenureCalculator({ startDate }: { startDate: Date }) {
   const [tenure, setTenure] = useState("");
@@ -112,103 +91,106 @@ function TenureCalculator({ startDate }: { startDate: Date }) {
   }, [startDate]);
 
   return (
-    <motion.span 
-      className="text-xs font-mono text-[var(--green)] bg-[var(--green-dim)] px-3 py-1.5 rounded-full flex items-center gap-2"
-      animate={{ boxShadow: ["0 0 10px var(--green-glow)", "0 0 20px var(--green-glow)", "0 0 10px var(--green-glow)"] }}
-      transition={{ duration: 2, repeat: Infinity }}
-    >
+    <span className="inline-flex items-center gap-2 text-xs font-mono text-[var(--green)] bg-[var(--green-dim)] px-3 py-1.5 rounded-full border border-[var(--green)]">
       <span className="w-2 h-2 rounded-full bg-[var(--green)] animate-pulse" />
       {tenure} and counting
-    </motion.span>
+    </span>
   );
 }
 
-export function Experience() {
-  const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
+// Check icon component
+const CheckIcon = () => (
+  <svg className="check-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+    <path d="M9 12l2 2 4-4" />
+    <circle cx="12" cy="12" r="10" />
+  </svg>
+);
 
+export function Experience() {
   return (
-    <section id="experience" className="py-20 px-8 md:px-12 bg-[var(--bg)] relative overflow-hidden">
+    <section id="experience" className="py-24 px-8 md:px-12 lg:px-16 bg-[var(--bg)]">
       <RevealWrapper>
-        <div className="max-w-6xl mx-auto relative z-10">
+        <div className="max-w-4xl">
           {/* Section Header */}
-          <div className="mb-16 flex items-baseline gap-4">
-            <span className="text-[var(--cyan)] font-mono text-lg font-bold">03.</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)]">
-              Experience
-            </h2>
+          <div className="section-header">
+            <span className="section-number">03.</span>
+            <h2 className="section-title">Experience</h2>
+            <div className="section-line" />
           </div>
 
           {/* Experience Items */}
-          <div className="space-y-6">
-              {experiences.map((exp, index) => {
-                const isHovered = hoveredIndex === index;
-                
-                return (
-                  <motion.div
-                    key={exp.company}
-                    className="relative"
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    onHoverStart={() => setHoveredIndex(index)}
-                    onHoverEnd={() => setHoveredIndex(null)}
-                  >
-                    {/* Card */}
-                    <div className="p-6 rounded-lg border border-[var(--border)] bg-[var(--bg3)] transition-all duration-300 hover:border-[var(--cyan)]">
-                      {/* Period */}
-                      <div className="text-xs font-mono text-[var(--text-muted)] mb-3 opacity-70">
-                        {exp.period}
-                      </div>
+          <div className="space-y-12">
+            {experiences.map((exp, index) => (
+              <motion.div
+                key={exp.company}
+                className="relative"
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
+              >
+                <div className="grid md:grid-cols-[200px_1fr] gap-6">
+                  {/* Left: Period */}
+                  <div className="flex flex-col gap-2">
+                    <span className="text-xs font-mono text-[var(--text3)] tracking-wider">
+                      {exp.period}
+                    </span>
+                    {exp.current && exp.startDate && (
+                      <TenureCalculator startDate={exp.startDate} />
+                    )}
+                  </div>
 
-                      {/* Header */}
-                      <div className="flex items-start justify-between gap-4 mb-4">
-                        <div className="flex-1">
-                          <h3 className="text-lg font-bold text-[var(--text)] mb-1 flex items-center gap-2">
-                            <span className="w-2 h-2 rounded-full bg-[var(--cyan)]" />
-                            {exp.company}
-                          </h3>
-                          <p className="text-sm text-[var(--text-muted)]">
-                            {exp.role}
-                          </p>
-                        </div>
-                      </div>
-
-                      {/* Description with checkmarks */}
-                      <ul className="space-y-2 mb-4">
-                        {exp.description.map((item, i) => (
-                          <motion.li
-                            key={i}
-                            className="text-sm text-[var(--text-muted)] flex items-start gap-3"
-                            initial={{ opacity: 0, x: -20 }}
-                            whileInView={{ opacity: 1, x: 0 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: index * 0.1 + i * 0.05 }}
-                          >
-                            <svg className="w-4 h-4 text-[var(--cyan)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
-                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
-                            </svg>
-                            {item}
-                          </motion.li>
-                        ))}
-                      </ul>
-
-                      {/* Technologies */}
-                      <div className="flex flex-wrap gap-2">
-                        {exp.technologies.map((tech) => (
-                          <span
-                            key={tech}
-                            className="text-xs font-mono px-2.5 py-1 rounded border border-[var(--border)] text-[var(--text-muted)]"
-                          >
-                            {tech}
-                          </span>
-                        ))}
-                      </div>
+                  {/* Right: Details */}
+                  <div>
+                    {/* Company and Role */}
+                    <div className="mb-4">
+                      <h3 className="text-lg font-semibold text-[var(--text)] flex items-center gap-2">
+                        <span>{exp.role}</span>
+                        <span className="text-[var(--text3)]">.</span>
+                        <a 
+                          href={exp.url} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="text-[var(--cyan)] hover:underline inline-flex items-center gap-1"
+                        >
+                          {exp.company}
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                          </svg>
+                        </a>
+                      </h3>
                     </div>
-                  </motion.div>
-                );
-              })}
-            </div>
+
+                    {/* Description with checkmarks */}
+                    <ul className="space-y-3 mb-6">
+                      {exp.description.map((item, i) => (
+                        <motion.li
+                          key={i}
+                          className="flex items-start gap-3 text-sm text-[var(--text2)]"
+                          initial={{ opacity: 0, x: -10 }}
+                          whileInView={{ opacity: 1, x: 0 }}
+                          viewport={{ once: true }}
+                          transition={{ delay: index * 0.1 + i * 0.05 }}
+                        >
+                          <CheckIcon />
+                          <span>{item}</span>
+                        </motion.li>
+                      ))}
+                    </ul>
+
+                    {/* Technologies */}
+                    <div className="flex flex-wrap gap-2">
+                      {exp.technologies.map((tech) => (
+                        <span key={tech} className="tech-badge">
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
         </div>
       </RevealWrapper>
     </section>
