@@ -143,13 +143,13 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="py-24 px-8 md:px-12 lg:px-16 bg-[var(--bg)]">
+    <section id="contact" className="py-16 px-6 md:px-10 lg:px-14 bg-[var(--bg)]">
       <RevealWrapper>
-        <div className="max-w-4xl">
+        <div className="max-w-3xl">
           {/* Section Header */}
-          <div className="section-header">
-            <span className="section-number">08.</span>
-            <h2 className="section-title">Get In Touch</h2>
+          <div className="section-header mb-8">
+            <span className="section-number text-sm">08.</span>
+            <h2 className="section-title text-xl">Get In Touch</h2>
             <div className="section-line" />
           </div>
 

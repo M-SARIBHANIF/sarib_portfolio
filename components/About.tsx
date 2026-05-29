@@ -5,25 +5,25 @@ import { RevealWrapper } from "./RevealWrapper";
 
 export function About() {
   return (
-    <section id="about" className="py-24 px-8 md:px-12 lg:px-16 bg-[var(--bg)]">
+    <section id="about" className="py-16 px-6 md:px-10 lg:px-14 bg-[var(--bg)]">
       <RevealWrapper>
-        <div className="max-w-4xl">
+        <div className="max-w-3xl">
           {/* Section Header */}
-          <div className="section-header">
-            <span className="section-number">01.</span>
-            <h2 className="section-title">About Me</h2>
+          <div className="section-header mb-8">
+            <span className="section-number text-sm">01.</span>
+            <h2 className="section-title text-xl">About Me</h2>
             <div className="section-line" />
           </div>
 
           {/* Terminal Window */}
-          <div className="terminal-window mb-10">
+          <div className="terminal-window mb-6">
             <div className="terminal-header">
               <div className="terminal-dot red" />
               <div className="terminal-dot yellow" />
               <div className="terminal-dot green" />
               <span className="terminal-title">~/sarib</span>
             </div>
-            <div className="terminal-body space-y-4">
+            <div className="terminal-body space-y-3 text-xs">
               {/* whoami command */}
               <div className="flex items-center gap-2">
                 <span className="text-[var(--green)]">sarib@dev</span>
@@ -86,7 +86,7 @@ export function About() {
           </div>
 
           {/* About Paragraphs with Highlighted Text */}
-          <div className="space-y-6 text-[var(--text2)] leading-relaxed">
+          <div className="space-y-4 text-[var(--text2)] leading-relaxed text-sm">
             <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}

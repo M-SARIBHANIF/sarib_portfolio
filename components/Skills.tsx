@@ -44,18 +44,18 @@ const skillsData = [
 
 export function Skills() {
   return (
-    <section id="skills" className="py-24 px-8 md:px-12 lg:px-16 bg-[var(--bg)]">
+    <section id="skills" className="py-16 px-6 md:px-10 lg:px-14 bg-[var(--bg)]">
       <RevealWrapper>
-        <div className="max-w-4xl">
+        <div className="max-w-3xl">
           {/* Section Header */}
-          <div className="section-header">
-            <span className="section-number">02.</span>
-            <h2 className="section-title">Skills & Tech Stack</h2>
+          <div className="section-header mb-8">
+            <span className="section-number text-sm">02.</span>
+            <h2 className="section-title text-xl">Skills & Tech Stack</h2>
             <div className="section-line" />
           </div>
 
           {/* Skills Grid - 2x2 */}
-          <div className="grid md:grid-cols-2 gap-8">
+          <div className="grid md:grid-cols-2 gap-4">
             {skillsData.map((categoryData, categoryIdx) => (
               <motion.div
                 key={categoryData.category}
@@ -66,12 +66,12 @@ export function Skills() {
                 transition={{ delay: categoryIdx * 0.1 }}
               >
                 {/* Category Header */}
-                <h3 className="font-mono text-sm text-[var(--cyan)] mb-6">
+                <h3 className="font-mono text-xs text-[var(--cyan)] mb-4">
                   // {categoryData.category}
                 </h3>
 
                 {/* Skills List */}
-                <div className="space-y-5">
+                <div className="space-y-3">
                   {categoryData.skills.map((skill, idx) => (
                     <motion.div
                       key={skill.name}
