@@ -1,32 +1,60 @@
 @import "tailwindcss";
 
 :root {
-  --bg: #000000;
-  --bg2: #090909;
-  --bg3: #111111;
-  --border: #333333;
-  --text: #ffffff;
-  --text-muted: #666666;
-  --strip: 56px;
-  --font-mono: "JetBrains Mono", monospace;
-  --font-sans: "Space Grotesk", sans-serif;
+  /* Core backgrounds */
+  --bg: #0a0f14;
+  --bg2: #0d1218;
+  --bg3: #111820;
+  --bg-card: #0f151c;
+  
+  /* Borders */
+  --border: #1e2832;
+  --border2: #2a3644;
+  
+  /* Primary accent - Teal/Cyan */
+  --cyan: #2dd4bf;
+  --cyan-dim: rgba(45, 212, 191, 0.1);
+  --cyan-glow: rgba(45, 212, 191, 0.4);
+  
+  /* Text colors */
+  --text: #f1f5f9;
+  --text2: #94a3b8;
+  --text3: #64748b;
+  --text-muted: #64748b;
+  
+  /* Accent colors */
+  --blue: #3b82f6;
+  --blue-dim: rgba(59, 130, 246, 0.1);
+  --blue-glow: rgba(59, 130, 246, 0.4);
+  
+  --green: #22c55e;
+  --green-dim: rgba(34, 197, 94, 0.1);
+  --green-glow: rgba(34, 197, 94, 0.4);
+  
+  --purple: #a855f7;
+  --purple-dim: rgba(168, 85, 247, 0.1);
+  --purple-glow: rgba(168, 85, 247, 0.4);
+  
+  --amber: #f59e0b;
+  --amber-dim: rgba(245, 158, 11, 0.1);
+  --amber-glow: rgba(245, 158, 11, 0.4);
+  
+  --pink: #ec4899;
+  --pink-dim: rgba(236, 72, 153, 0.1);
+  --pink-glow: rgba(236, 72, 153, 0.4);
+  
+  --red: #ef4444;
+  --red-dim: rgba(239, 68, 68, 0.1);
+  --red-glow: rgba(239, 68, 68, 0.4);
+  
+  /* Fonts */
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+  --font-sans: "Space Grotesk", system-ui, sans-serif;
 }
 
 /* ----------------------------------------- */
-/* BASE STYLES & CURSOR                      */
+/* BASE STYLES                               */
 /* ----------------------------------------- */
-
-/* Force persistent crosshair cursor everywhere */
-*,
-*::before,
-*::after {
-  cursor: crosshair !important;
-}
-
-/* Slightly different crosshair for clickable elements */
-a, button, [role="button"], input[type="submit"] {
-  cursor: cell !important; 
-}
 
 html {
   overflow-x: hidden;
@@ -38,10 +66,11 @@ body {
   color: var(--text);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
 }
 
 ::selection {
-  background-color: var(--text);
+  background-color: var(--cyan);
   color: var(--bg);
 }
 
@@ -55,352 +84,353 @@ body {
   }
 }
 
-/* Brutalist Scrollbar */
+/* Custom Scrollbar */
 ::-webkit-scrollbar {
   width: 8px;
 }
 
 ::-webkit-scrollbar-track {
   background: var(--bg);
-  border-left: 1px solid var(--border);
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--bg3);
-  border-radius: 0;
+  background: var(--border);
+  border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(--text);
+  background: var(--cyan);
 }
 
 /* ----------------------------------------- */
-/* 1. STRUCTURAL SPUNK (Backgrounds & Grids) */
+/* TERMINAL STYLES                           */
 /* ----------------------------------------- */
 
-/* Hazard Stripes (Hard stops, no fading) */
-.hazard-stripes {
-  background: repeating-linear-gradient(
-    -45deg,
-    var(--bg),
-    var(--bg) 10px,
-    var(--border) 10px,
-    var(--border) 20px
-  );
-}
-
-/* CRT Scanline Overlay (Harsh 1px lines) */
-.scanline-mesh {
-  background-image: repeating-linear-gradient(
-    0deg,
-    transparent,
-    transparent 2px,
-    rgba(255, 255, 255, 0.05) 2px,
-    rgba(255, 255, 255, 0.05) 3px
-  );
-  pointer-events: none;
-}
-
-/* Industrial Dot Grid */
-.industrial-grid {
-  background-image: radial-gradient(var(--border) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* Marquee Ticker Tape */
-@keyframes ticker {
-  0% { transform: translateX(0); }
-  100% { transform: translateX(-50%); }
-}
-
-.ticker-tape {
-  display: flex;
-  width: 200%;
-  border-top: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+.terminal-window {
   background: var(--bg2);
-  animation: ticker 10s linear infinite;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  overflow: hidden;
 }
 
-/* ----------------------------------------- */
-/* 2. UNIQUE UI ELEMENTS                     */
-/* ----------------------------------------- */
-
-/* Targeting Crosshair Frame */
-.ui-frame {
-  position: relative;
-  padding: 1rem;
-}
-
-.ui-frame::before,
-.ui-frame::after {
-  content: "";
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  pointer-events: none;
-}
-
-.ui-frame::before {
-  background: 
-    linear-gradient(to right, var(--text) 2px, transparent 2px) 0 0,
-    linear-gradient(to bottom, var(--text) 2px, transparent 2px) 0 0,
-    linear-gradient(to left, var(--text) 2px, transparent 2px) 100% 100%,
-    linear-gradient(to top, var(--text) 2px, transparent 2px) 100% 100%;
-  background-size: 12px 12px;
-  background-repeat: no-repeat;
-}
-
-.ui-frame::after {
-  background: 
-    linear-gradient(to left, var(--text) 2px, transparent 2px) 100% 0,
-    linear-gradient(to bottom, var(--text) 2px, transparent 2px) 100% 0,
-    linear-gradient(to right, var(--text) 2px, transparent 2px) 0 100%,
-    linear-gradient(to top, var(--text) 2px, transparent 2px) 0 100%;
-  background-size: 12px 12px;
-  background-repeat: no-repeat;
-}
-
-/* Pure CSS Barcode Generator */
-.css-barcode {
-  height: 40px;
-  width: 100%;
-  background-image: repeating-linear-gradient(
-    to right,
-    var(--text) 0,
-    var(--text) 2px,
-    transparent 2px,
-    transparent 5px,
-    var(--text) 5px,
-    var(--text) 6px,
-    transparent 6px,
-    transparent 10px,
-    var(--text) 10px,
-    var(--text) 14px,
-    transparent 14px,
-    transparent 16px
-  );
-}
-
-/* ----------------------------------------- */
-/* 3. SIDEBAR & NAVIGATION STYLES            */
-/* ----------------------------------------- */
-
-/* Sharp Blink */
-@keyframes sharpBlink {
-  0%, 49% { opacity: 1; }
-  50%, 99% { opacity: 0; }
-  100% { opacity: 1; }
-}
-
-.blink-hard {
-  animation: sharpBlink 1s step-end infinite;
-}
-
-/* Fixed Sidebar Link */
-.nav-link {
-  position: relative;
+.terminal-header {
   display: flex;
   align-items: center;
-  padding: 0.75rem 1rem;
-  color: var(--text-muted);
-  border-left: 4px solid transparent;
-  transition: background-color 0s step-end, color 0s step-end;
+  gap: 8px;
+  padding: 12px 16px;
+  background: var(--bg3);
+  border-bottom: 1px solid var(--border);
+}
+
+.terminal-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.terminal-dot.red { background: #ff5f56; }
+.terminal-dot.yellow { background: #ffbd2e; }
+.terminal-dot.green { background: #27c93f; }
+
+.terminal-title {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--text3);
+  margin-left: 8px;
+}
+
+.terminal-body {
+  padding: 20px;
+  font-family: var(--font-mono);
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+/* Terminal syntax highlighting */
+.terminal-prompt {
+  color: var(--cyan);
+  font-weight: 600;
+}
+
+.terminal-command {
+  color: var(--text);
+}
+
+.terminal-output {
+  color: var(--text2);
+}
+
+.terminal-keyword {
+  color: var(--cyan);
+}
+
+.terminal-string {
+  color: var(--green);
+}
+
+.terminal-variable {
+  color: var(--amber);
+}
+
+.terminal-comment {
+  color: var(--text3);
+}
+
+/* ----------------------------------------- */
+/* SECTION HEADER STYLES                     */
+/* ----------------------------------------- */
+
+.section-header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 48px;
+}
+
+.section-number {
+  font-family: var(--font-mono);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--cyan);
+}
+
+.section-title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--text);
+}
+
+.section-line {
+  flex: 1;
+  height: 1px;
+  background: var(--border);
+  margin-left: 16px;
+}
+
+/* ----------------------------------------- */
+/* BADGE STYLES                              */
+/* ----------------------------------------- */
+
+.tech-badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 6px 14px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--cyan);
+  background: transparent;
+  border: 1px solid var(--cyan);
+  border-radius: 6px;
+  transition: all 0.2s ease;
+}
+
+.tech-badge:hover {
+  background: var(--cyan-dim);
+  box-shadow: 0 0 12px var(--cyan-glow);
+}
+
+.badge-featured {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 10px;
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: var(--cyan);
+  background: var(--cyan-dim);
+  border: 1px solid var(--cyan);
+  border-radius: 4px;
+}
+
+/* ----------------------------------------- */
+/* CARD STYLES                               */
+/* ----------------------------------------- */
+
+.card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 24px;
+  transition: all 0.3s ease;
+}
+
+.card:hover {
+  border-color: var(--cyan);
+  box-shadow: 0 0 20px rgba(45, 212, 191, 0.1);
+}
+
+.card-icon {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--cyan-dim);
+  border-radius: 10px;
+  color: var(--cyan);
+  margin-bottom: 16px;
+}
+
+/* ----------------------------------------- */
+/* PROGRESS BAR STYLES                       */
+/* ----------------------------------------- */
+
+.progress-bar-container {
+  height: 6px;
+  background: var(--bg3);
+  border-radius: 3px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--cyan);
+  border-radius: 3px;
+  transition: width 0.8s ease;
+}
+
+/* ----------------------------------------- */
+/* CHECK ICON STYLES                         */
+/* ----------------------------------------- */
+
+.check-icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  color: var(--cyan);
+  flex-shrink: 0;
+}
+
+/* ----------------------------------------- */
+/* HIGHLIGHT TEXT                            */
+/* ----------------------------------------- */
+
+.text-highlight {
+  color: var(--text);
+  font-weight: 600;
+}
+
+/* ----------------------------------------- */
+/* NAVIGATION STYLES                         */
+/* ----------------------------------------- */
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 0;
+  color: var(--text3);
+  font-family: var(--font-mono);
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.2s ease;
   text-decoration: none;
 }
 
-.nav-link:hover {
+.nav-item:hover {
   color: var(--text);
-  background-color: var(--bg2);
-  border-left: 4px solid var(--border);
 }
 
-.nav-link.active,
-.nav-link[aria-current="page"] {
-  color: var(--bg);
-  background-color: var(--text);
-  border-left: 4px solid var(--text);
-  font-weight: bold;
+.nav-item.active {
+  color: var(--cyan);
 }
 
-.nav-link.active::before,
-.nav-link[aria-current="page"]::before {
-  content: ">";
-  margin-right: 0.5rem;
-  font-family: var(--font-mono);
-  font-weight: bold;
-  animation: sharpBlink 1s step-end infinite;
+.nav-line {
+  width: 32px;
+  height: 1px;
+  background: var(--text3);
+  transition: all 0.2s ease;
+}
+
+.nav-item:hover .nav-line,
+.nav-item.active .nav-line {
+  width: 56px;
+  background: var(--cyan);
 }
 
 /* ----------------------------------------- */
-/* 4. INTERACTIVE SPUNK (Hover & Clicks)     */
+/* CURSOR BLINK                              */
 /* ----------------------------------------- */
 
-/* Hard Drop Shadow */
-.hard-shadow {
-  border: 1px solid var(--border);
-  transition: transform 0.1s step-end, box-shadow 0.1s step-end;
+@keyframes blink {
+  0%, 50% { opacity: 1; }
+  51%, 100% { opacity: 0; }
 }
 
-.hard-shadow:hover {
-  transform: translate(-4px, -4px);
-  box-shadow: 4px 4px 0 var(--text);
-  border-color: var(--text);
-}
-
-/* Stark Inversion */
-.stark-invert {
-  background-color: transparent;
-  color: var(--text);
-  border: 1px solid var(--text);
-  transition: background-color 0.1s ease, color 0.1s ease;
-}
-
-.stark-invert:hover {
-  background-color: var(--text);
-  color: var(--bg);
-}
-
-/* Redacted Text */
-.text-redacted {
-  background-color: var(--text);
-  color: var(--text);
-  padding: 0 4px;
-  transition: background-color 0s step-end, color 0s step-end;
-  cursor: help !important;
-}
-
-.text-redacted:hover {
-  background-color: transparent;
-  color: var(--text);
-}
-
-/* Mechanical Button Press */
-.mech-btn {
-  display: inline-block;
-  padding: 0.75rem 1.5rem;
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  background: var(--bg);
-  color: var(--text);
-  border: 2px solid var(--text);
-  box-shadow: 6px 6px 0 var(--border);
-  transition: all 0.05s linear;
-}
-
-.mech-btn:hover {
-  box-shadow: 8px 8px 0 var(--text-muted);
-  transform: translate(-2px, -2px);
-}
-
-.mech-btn:active {
-  box-shadow: 0 0 0 var(--text);
-  transform: translate(6px, 6px);
-  background: var(--text);
-  color: var(--bg);
-}
-
-/* Slashed Reveal */
-.slash-reveal {
-  position: relative;
-  overflow: hidden;
-}
-
-.slash-reveal::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: -100%;
-  width: 50%;
-  height: 100%;
-  background: var(--text);
-  transform: skewX(-45deg);
-  transition: left 0.3s cubic-bezier(0.19, 1, 0.22, 1);
-  mix-blend-mode: difference;
-  z-index: 10;
-  pointer-events: none;
-}
-
-.slash-reveal:hover::before {
-  left: 150%;
+.cursor-blink {
+  animation: blink 1s step-end infinite;
 }
 
 /* ----------------------------------------- */
-/* 5. TYPOGRAPHY KINETICS                    */
+/* GLOW EFFECTS                              */
 /* ----------------------------------------- */
 
-/* Wireframe Text Fill */
-.text-wireframe {
-  color: transparent;
-  -webkit-text-stroke: 1px var(--text-muted);
-  transition: color 0.2s ease, -webkit-text-stroke 0.2s ease;
+.glow-cyan {
+  box-shadow: 0 0 20px var(--cyan-glow);
 }
 
-.text-wireframe:hover {
+.glow-blue {
+  box-shadow: 0 0 20px var(--blue-glow);
+}
+
+.glow-green {
+  box-shadow: 0 0 20px var(--green-glow);
+}
+
+.glow-purple {
+  box-shadow: 0 0 20px var(--purple-glow);
+}
+
+/* ----------------------------------------- */
+/* FOOTER STYLES                             */
+/* ----------------------------------------- */
+
+.footer-link {
   color: var(--text);
-  -webkit-text-stroke: 1px var(--text);
+  font-weight: 600;
+  transition: color 0.2s ease;
 }
 
-/* Stepped Text Fill */
-.text-step-fill {
-  position: relative;
-  color: transparent;
-  -webkit-text-stroke: 1px var(--text);
+.footer-link:hover {
+  color: var(--cyan);
 }
 
-.text-step-fill::before {
-  content: attr(data-text);
-  position: absolute;
-  left: 0;
-  top: 0;
-  color: var(--text);
-  overflow: hidden;
-  white-space: nowrap;
-  width: 0%;
-  transition: width 0.3s steps(5, end);
+/* Status indicator pulse */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
 }
 
-.text-step-fill:hover::before {
-  width: 100%;
+.status-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse-dot 2s ease-in-out infinite;
 }
 
-/* Glitch Text Effect */
-.glitch-hover {
-  position: relative;
+/* ----------------------------------------- */
+/* RESPONSIVE CONTAINER PADDING              */
+/* ----------------------------------------- */
+
+.section-container {
+  padding-left: 32px;
+  padding-right: 32px;
 }
 
-.glitch-hover:hover::before,
-.glitch-hover:hover::after {
-  content: attr(data-text);
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: var(--bg);
+@media (min-width: 768px) {
+  .section-container {
+    padding-left: 48px;
+    padding-right: 48px;
+  }
 }
 
-.glitch-hover:hover::before {
-  left: 2px;
-  text-shadow: -1px 0 var(--text-muted);
-  clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
-  animation: glitch-anim 0.2s step-end infinite alternate-reverse;
-}
-
-.glitch-hover:hover::after {
-  left: -2px;
-  text-shadow: 1px 0 var(--text);
-  clip-path: polygon(0 55%, 100% 55%, 100% 100%, 0 100%);
-  animation: glitch-anim 0.3s step-end infinite alternate-reverse;
-}
-
-@keyframes glitch-anim {
-  0% { transform: translate(0); }
-  20% { transform: translate(-2px, 1px); }
-  40% { transform: translate(-1px, -1px); }
-  60% { transform: translate(2px, 1px); }
-  80% { transform: translate(1px, -1px); }
-  100% { transform: translate(0); }
+@media (min-width: 1024px) {
+  .section-container {
+    padding-left: 64px;
+    padding-right: 64px;
+  }
 }

@@ -16,26 +16,15 @@ type SocialButton = {
 const contactData = {
   name: "Muhammad Sarib Hanif",
   email: "saribraja1998@gmail.com",
-  phone: "+92-340-5344160",
-  location: "Islamabad, Pakistan",
-  github: "github.com/M-SARIBHANIF",
-  linkedin: "linkedin.com/in/m-sarib-hanif",
-  timezone: "Asia/Karachi",
-  available: true,
+  status: "open to opportunities",
+  location: "Islamabad, Pakistan (Remote OK)",
+  interests: ["engineering", "coffee", "gaming"],
 };
-
-const contactJson = `{
-  "name": "${contactData.name}",
-  "email": "${contactData.email}",
-  "phone": "${contactData.phone}",
-  "location": "${contactData.location}",
-  "available": ${contactData.available}
-}`;
 
 const socialButtons: SocialButton[] = [
   {
     name: "LinkedIn",
-    href: `https://${contactData.linkedin}`,
+    href: "https://linkedin.com/in/m-sarib-hanif",
     color: "cyan",
     primary: false,
     icon: (
@@ -46,8 +35,8 @@ const socialButtons: SocialButton[] = [
   },
   {
     name: "GitHub",
-    href: `https://${contactData.github}`,
-    color: "pink",
+    href: "https://github.com/M-SARIBHANIF",
+    color: "purple",
     primary: false,
     icon: (
       <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
@@ -58,98 +47,33 @@ const socialButtons: SocialButton[] = [
 ];
 
 export function Contact() {
-  const [typedJson, setTypedJson] = useState("");
-  const [showToast, setShowToast] = useState(false);
   const [showForm, setShowForm] = useState(false);
   const [sending, setSending] = useState(false);
   const [formStatus, setFormStatus] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
-  const [isInView, setIsInView] = useState(false);
-  const [hoveredButton, setHoveredButton] = useState<string | null>(null);
-  const ref = useRef<HTMLDivElement>(null);
+  const [copiedEmail, setCopiedEmail] = useState(false);
 
   const WORD_LIMIT = 250;
   const [errors, setErrors] = useState<{ name?: string; email?: string; subject?: string; message?: string }>({});
-  const [touched, setTouched] = useState<{ name?: boolean; email?: boolean; subject?: boolean; message?: boolean }>({});
   const [submitAttempt, setSubmitAttempt] = useState(false);
 
-  useEffect(() => {
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting && !isInView) {
-          setIsInView(true);
-        }
-      },
-      { threshold: 0.3 }
-    );
-
-    if (ref.current) {
-      observer.observe(ref.current);
-    }
-
-    return () => observer.disconnect();
-  }, [isInView]);
-
-  useEffect(() => {
-    if (!isInView) return;
-
-    let i = 0;
-    const interval = setInterval(() => {
-      if (i <= contactJson.length) {
-        setTypedJson(contactJson.slice(0, i));
-        i++;
-      } else {
-        clearInterval(interval);
-      }
-    }, 15);
-
-    return () => clearInterval(interval);
-  }, [isInView]);
-
-  // Listen for a global event to open the contact modal (used by other components)
+  // Listen for global event to open the contact modal
   useEffect(() => {
     const handler = () => setShowForm(true);
-    if (typeof window !== 'undefined') {
-      window.addEventListener('openContact', handler as EventListener);
+    if (typeof window !== "undefined") {
+      window.addEventListener("openContact", handler as EventListener);
     }
     return () => {
-      if (typeof window !== 'undefined') {
-        window.removeEventListener('openContact', handler as EventListener);
+      if (typeof window !== "undefined") {
+        window.removeEventListener("openContact", handler as EventListener);
       }
     };
   }, []);
 
   const copyEmail = () => {
     navigator.clipboard.writeText(contactData.email);
-    setShowToast(true);
-    setTimeout(() => setShowToast(false), 3000);
-  };
-
-  const sendEmail = async (e?: FormEvent) => {
-    if (e) e.preventDefault();
-    setSubmitAttempt(true);
-    const valid = validateForm();
-    if (!valid) return;
-    setSending(true);
-    try {
-      const res = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(form),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        setFormStatus('Message sent — thank you!');
-        setForm({ name: '', email: '', subject: '', message: '' });
-        setTimeout(() => setShowForm(false), 1200);
-      } else {
-        setFormStatus(data?.error || 'Failed to send message');
-      }
-    } catch (err) {
-      setFormStatus('Failed to send message');
-    } finally {
-      setSending(false);
-    }
+    setCopiedEmail(true);
+    setTimeout(() => setCopiedEmail(false), 2000);
   };
 
   const validateEmail = (value: string) => {
@@ -161,332 +85,288 @@ export function Contact() {
     const next: typeof errors = {};
     const wordCount = form.message.trim() ? form.message.trim().split(/\s+/).filter(Boolean).length : 0;
 
-    // Only show errors if the field has content or user attempted to submit
-    if ((form.name && form.name.trim().length > 0) || submitAttempt) {
-      if (!form.name || form.name.trim().length < 2) next.name = 'Please enter your name (min 2 characters)';
-    }
-
-    if ((form.email && form.email.trim().length > 0) || submitAttempt) {
-      if (!form.email || !validateEmail(form.email)) next.email = 'Please enter a valid email address';
-    }
-
-    if ((form.message && form.message.trim().length > 0) || submitAttempt) {
-      if (!form.message || form.message.trim().length < 6) next.message = 'Please enter a message (min 6 characters)';
+    if (submitAttempt) {
+      if (!form.name || form.name.trim().length < 2) next.name = "Please enter your name (min 2 characters)";
+      if (!form.email || !validateEmail(form.email)) next.email = "Please enter a valid email address";
+      if (!form.message || form.message.trim().length < 6) next.message = "Please enter a message (min 6 characters)";
       if (wordCount > WORD_LIMIT) next.message = `Message too long — limit ${WORD_LIMIT} words`;
-    } else {
-      // if empty and not submitAttempt, don't set message error
     }
 
-    if ((form.subject && form.subject.length > 0) || submitAttempt) {
-      if (form.subject && form.subject.length > 200) next.subject = 'Subject is too long';
-    }
     setErrors(next);
     return Object.keys(next).length === 0;
   };
 
+  const sendEmail = async (e?: FormEvent) => {
+    if (e) e.preventDefault();
+    setSubmitAttempt(true);
+    const valid = validateForm();
+    if (!valid) return;
+    setSending(true);
+    try {
+      const res = await fetch("/api/contact", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(form),
+      });
+      const data = await res.json();
+      if (res.ok) {
+        setFormStatus("Message sent — thank you!");
+        setForm({ name: "", email: "", subject: "", message: "" });
+        setTimeout(() => setShowForm(false), 1200);
+      } else {
+        setFormStatus(data?.error || "Failed to send message");
+      }
+    } catch {
+      setFormStatus("Failed to send message");
+    } finally {
+      setSending(false);
+    }
+  };
+
   useEffect(() => {
-    // live-validate lightly as the user types (don't overwhelm)
     if (!showForm) return;
     const t = setTimeout(() => validateForm(), 220);
     return () => clearTimeout(t);
   }, [form, showForm]);
 
-  const wordCount = form.message.trim() ? form.message.trim().split(/\s+/).filter(Boolean).length : 0;
-  const isFormValid = form.name.trim().length >= 2 && validateEmail(form.email) && form.message.trim().length >= 6 && wordCount <= WORD_LIMIT;
-  const modalChildrenCount = 6; // header, name, email, subject, message, buttons
-  const staggerDelay = 0.12;
-  const baseAppearDelay = 0.25;
-
   const containerVariants: Variants = {
     hidden: { opacity: 0 },
     show: {
       opacity: 1,
-      transition: { staggerChildren: staggerDelay, delayChildren: baseAppearDelay },
+      transition: { staggerChildren: 0.12, delayChildren: 0.25 },
     },
   };
 
   const itemVariants: Variants = {
-    hidden: (i: number) => ({ opacity: 0, y: 18 + i * 2, scale: 0.985 }),
-    show: { opacity: 1, y: 0, scale: 1, transition: { type: "spring" as const, stiffness: 500, damping: 28 } },
+    hidden: { opacity: 0, y: 18 },
+    show: { opacity: 1, y: 0, transition: { type: "spring", stiffness: 500, damping: 28 } },
   };
 
   return (
-    <section id="contact" className="py-20 px-8 md:px-12 bg-[var(--bg)]">
+    <section id="contact" className="py-24 px-8 md:px-12 lg:px-16 bg-[var(--bg)]">
       <RevealWrapper>
-        <div className="max-w-6xl mx-auto relative z-10">
+        <div className="max-w-4xl">
           {/* Section Header */}
-          <div className="mb-12 flex items-baseline gap-4">
-            <span className="text-[var(--cyan)] font-mono text-lg font-bold">08.</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)]">
-              Get In Touch
-            </h2>
+          <div className="section-header">
+            <span className="section-number">08.</span>
+            <h2 className="section-title">Get In Touch</h2>
+            <div className="section-line" />
           </div>
 
-          {/* Terminal Card */}
+          {/* Terminal Code Block */}
           <motion.div
-            ref={ref}
-            className="bg-[var(--bg2)] border border-[var(--border)] rounded-2xl overflow-hidden max-w-xl mx-auto hover:border-[var(--cyan)] transition-colors gradient-border-glow"
+            className="terminal-window max-w-xl mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
-            whileHover={{ boxShadow: "0 0 30px var(--cyan-glow)" }}
           >
-            {/* Terminal Header */}
-            <div className="flex items-center gap-2 px-4 py-3 border-b border-[var(--border)] bg-[var(--bg3)]/50">
-              <div className="flex gap-2">
-                <div className="w-3 h-3 rounded-full bg-[var(--red)]" style={{ boxShadow: "0 0 8px var(--red-glow)" }} />
-                <div className="w-3 h-3 rounded-full bg-[var(--amber)]" style={{ boxShadow: "0 0 8px var(--amber-glow)" }} />
-                <div className="w-3 h-3 rounded-full bg-[var(--green)]" style={{ boxShadow: "0 0 8px var(--green-glow)" }} />
-              </div>
-              <span className="text-xs font-mono text-[var(--text3)] ml-2">
-                contact.json
-              </span>
-              {/* Status indicator */}
-              <motion.div
-                className="ml-auto flex items-center gap-2"
-                animate={{ opacity: typedJson.length >= contactJson.length ? 1 : 0 }}
-              >
-                <motion.div
-                  className="w-2 h-2 rounded-full bg-[var(--green)]"
-                  animate={{ boxShadow: ["0 0 5px var(--green-glow)", "0 0 15px var(--green-glow)", "0 0 5px var(--green-glow)"] }}
-                  transition={{ duration: 1.5, repeat: Infinity }}
-                />
-                <span className="text-[10px] font-mono text-[var(--green)]">ready</span>
-              </motion.div>
+            <div className="terminal-header">
+              <div className="terminal-dot red" />
+              <div className="terminal-dot yellow" />
+              <div className="terminal-dot green" />
+              <span className="terminal-title">contact.ts</span>
             </div>
-
-            {/* JSON Content */}
-            <div className="p-6 font-mono text-sm">
-              <pre className="whitespace-pre-wrap text-[var(--text2)]">
-                {typedJson.split("\n").map((line, i) => {
-                  const highlighted = line
-                    .replace(
-                      /"([^"]+)":/g,
-                      '<span class="text-[var(--cyan)]" style="text-shadow: 0 0 8px var(--cyan-glow)">"$1"</span>:'
-                    )
-                    .replace(
-                      /: "([^"]+)"/g,
-                      ': <span class="text-[var(--green)]" style="text-shadow: 0 0 8px var(--green-glow)">"$1"</span>'
-                    )
-                    .replace(
-                      /: (true|false)/g,
-                      ': <span class="text-[var(--amber)]" style="text-shadow: 0 0 8px var(--amber-glow)">$1</span>'
-                    );
-                  return (
-                    <span
-                      key={i}
-                      dangerouslySetInnerHTML={{ __html: highlighted }}
-                    />
-                  );
-                })}
-                <motion.span 
-                  className="w-2 h-4 bg-[var(--cyan)] inline-block ml-1 cursor-blink"
-                  animate={{ boxShadow: ["0 0 5px var(--cyan-glow)", "0 0 15px var(--cyan-glow)", "0 0 5px var(--cyan-glow)"] }}
-                  transition={{ duration: 1, repeat: Infinity }}
-                />
+            <div className="terminal-body">
+              <pre className="text-sm leading-relaxed">
+                <span className="text-[var(--purple)]">const</span>{" "}
+                <span className="text-[var(--text)]">developer</span>{" "}
+                <span className="text-[var(--text3)]">=</span>{" "}
+                <span className="text-[var(--text3)]">{"{"}</span>
+                {"\n"}
+                <span className="text-[var(--text3)]">{"  "}</span>
+                <span className="text-[var(--cyan)]">name</span>
+                <span className="text-[var(--text3)]">:</span>{" "}
+                <span className="text-[var(--green)]">&quot;{contactData.name}&quot;</span>
+                <span className="text-[var(--text3)]">,</span>
+                {"\n"}
+                <span className="text-[var(--text3)]">{"  "}</span>
+                <span className="text-[var(--cyan)]">status</span>
+                <span className="text-[var(--text3)]">:</span>{" "}
+                <span className="text-[var(--green)]">&quot;{contactData.status}&quot;</span>
+                <span className="text-[var(--text3)]">,</span>
+                {"\n"}
+                <span className="text-[var(--text3)]">{"  "}</span>
+                <span className="text-[var(--cyan)]">location</span>
+                <span className="text-[var(--text3)]">:</span>{" "}
+                <span className="text-[var(--green)]">&quot;{contactData.location}&quot;</span>
+                <span className="text-[var(--text3)]">,</span>
+                {"\n"}
+                <span className="text-[var(--text3)]">{"  "}</span>
+                <span className="text-[var(--cyan)]">interests</span>
+                <span className="text-[var(--text3)]">:</span>{" "}
+                <span className="text-[var(--text3)]">[</span>
+                {contactData.interests.map((interest, i) => (
+                  <span key={interest}>
+                    <span className="text-[var(--green)]">&quot;{interest}&quot;</span>
+                    {i < contactData.interests.length - 1 && <span className="text-[var(--text3)]">, </span>}
+                  </span>
+                ))}
+                <span className="text-[var(--text3)]">]</span>
+                <span className="text-[var(--text3)]">,</span>
+                {"\n"}
+                <span className="text-[var(--text3)]">{"};"}</span>
+                {"\n\n"}
+                <span className="text-[var(--text3)]">// Let&apos;s build something together</span>
               </pre>
             </div>
-          </motion.div>
 
-          {/* Action Buttons */}
-          <motion.div
-            className="flex flex-wrap justify-center gap-4 mt-8"
-            initial={{ opacity: 0, y: 20 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
-            transition={{ delay: 0.2 }}
-          >
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.25 }}
-            >
+            {/* Action buttons in terminal */}
+            <div className="flex items-center gap-3 p-4 border-t border-[var(--border)]">
               <button
                 onClick={() => setShowForm(true)}
-                className={`relative px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-all overflow-hidden bg-[var(--blue)] text-white`}
-                style={hoveredButton === 'Get in touch' ? { boxShadow: `0 0 25px var(--blue-glow)` } : {}}
-                onMouseEnter={() => setHoveredButton('Get in touch')}
-                onMouseLeave={() => setHoveredButton(null)}
+                className="inline-flex items-center gap-2 px-5 py-2.5 bg-[var(--cyan)] text-[var(--bg)] rounded-lg font-medium text-sm hover:opacity-90 transition-opacity"
               >
-                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M16 12V8a4 4 0 10-8 0v4M5 12h14l-1 8H6l-1-8z" />
+                <span className="text-[var(--bg)]">&gt;</span>
+                Say Hello
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
-                Get in touch
               </button>
-            </motion.div>
+              <button
+                onClick={copyEmail}
+                className="inline-flex items-center gap-2 px-5 py-2.5 border border-[var(--border)] text-[var(--text2)] rounded-lg font-medium text-sm hover:border-[var(--cyan)] hover:text-[var(--cyan)] transition-colors"
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <rect x="9" y="9" width="13" height="13" rx="2" />
+                  <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+                </svg>
+                {copiedEmail ? "Copied!" : "Copy Email"}
+              </button>
+            </div>
 
-            {socialButtons.map((button, index) => {
-              const isHovered = hoveredButton === button.name;
-              const ButtonWrapper = button.action ? "button" : "a";
-              const props = button.action 
-                ? { onClick: copyEmail } 
-                : { href: button.href, target: "_blank", rel: "noopener noreferrer" };
-
-              return (
-                <motion.div
-                  key={button.name}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: 0.3 + index * 0.1 }}
-                  onHoverStart={() => setHoveredButton(button.name)}
-                  onHoverEnd={() => setHoveredButton(null)}
-                >
-                  <ButtonWrapper
-                    {...props}
-                    className={`relative px-6 py-3 rounded-xl font-medium flex items-center gap-2 transition-all overflow-hidden ${
-                      button.primary
-                        ? `bg-[var(--${button.color})] text-white`
-                        : `border border-[var(--${button.color})] text-[var(--${button.color})] hover:bg-[var(--${button.color}-dim)]`
-                    }`}
-                    style={isHovered ? { boxShadow: `0 0 25px var(--${button.color}-glow)` } : {}}
-                  >
-                    <motion.span
-                      animate={isHovered ? { scale: [1, 1.2, 1] } : {}}
-                      transition={{ duration: 0.3 }}
-                    >
-                      {button.icon}
-                    </motion.span>
-                    {button.name}
-                    {button.primary && (
-                      <motion.div
-                        className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent pointer-events-none"
-                        initial={{ x: "-100%" }}
-                        animate={isHovered ? { x: "100%" } : { x: "-100%" }}
-                        transition={{ duration: 0.42 }}
-                      />
-                    )}
-                  </ButtonWrapper>
-                </motion.div>
-              );
-            })}
+            {/* Git branch footer */}
+            <div className="flex items-center justify-between px-4 py-2 bg-[var(--bg3)] border-t border-[var(--border)] text-xs font-mono">
+              <div className="flex items-center gap-2 text-[var(--text3)]">
+                <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 16 16">
+                  <path d="M11.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122V6A2.5 2.5 0 0110 8.5H6a1 1 0 00-1 1v1.128a2.251 2.251 0 11-1.5 0V5.372a2.25 2.25 0 111.5 0v1.836A2.492 2.492 0 016 7h4a1 1 0 001-1v-.628A2.25 2.25 0 019.5 3.25zM4.25 12a.75.75 0 100 1.5.75.75 0 000-1.5zM3.5 3.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0z"/>
+                </svg>
+                main
+              </div>
+              <span className="text-[var(--text3)]">ready to merge</span>
+            </div>
           </motion.div>
 
-          {/* Modal Form */}
-          <AnimatePresence>
-            {showForm && (
-              <motion.div
-                className="fixed inset-0 z-50 flex items-center justify-center bg-black/50"
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                exit={{ opacity: 0 }}
+          {/* Social Links */}
+          <div className="flex gap-4">
+            {socialButtons.map((button, index) => (
+              <motion.a
+                key={button.name}
+                href={button.href}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 px-5 py-2.5 border border-[var(--border)] text-[var(--text2)] rounded-lg font-medium text-sm hover:border-[var(--cyan)] hover:text-[var(--cyan)] transition-colors"
+                initial={{ opacity: 0, y: 10 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.1 }}
               >
-                <motion.div className="relative w-full max-w-lg mx-4" initial={{ scale: 0.98 }} animate={{ scale: 1 }} exit={{ scale: 0.98 }}>
-
-                  {/* Permanent border: removed animated SVG stroke */}
-
-                  <motion.form
-                    onSubmit={sendEmail}
-                    className="relative z-10 bg-[var(--bg)] rounded-xl p-6 shadow-lg border border-[var(--cyan)]"
-                    variants={containerVariants}
-                    initial="hidden"
-                    animate="show"
-                    exit="hidden"
-                  >
-                    <motion.div variants={itemVariants} custom={0} className="flex items-center justify-between mb-4">
-                      <h3 className="text-xl font-semibold">Send a message</h3>
-                      <button type="button" onClick={() => setShowForm(false)} className="text-[var(--text2)]">Close</button>
-                    </motion.div>
-
-                    <div className="grid grid-cols-1 gap-3">
-                      <motion.div variants={itemVariants} custom={1}>
-                        <input
-                          required
-                          placeholder="Your name"
-                          value={form.name}
-                          onChange={(e) => { setForm({ ...form, name: e.target.value }); if (e.target.value.trim().length > 0) setTouched(t => ({ ...t, name: true })); }}
-                          onBlur={() => setTouched(t => ({ ...t, name: true }))}
-                          aria-invalid={!!errors.name}
-                          className={`px-3 py-2 rounded border ${errors.name ? 'border-red-400' : ''} bg-[var(--bg2)] w-full`}
-                        />
-                        {errors.name && <div className="text-xs text-red-400 mt-1">{errors.name}</div>}
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} custom={2}>
-                        <input
-                          required
-                          placeholder="Your email"
-                          type="email"
-                          value={form.email}
-                          onChange={(e) => { setForm({ ...form, email: e.target.value }); if (e.target.value.trim().length > 0) setTouched(t => ({ ...t, email: true })); }}
-                          onBlur={() => setTouched(t => ({ ...t, email: true }))}
-                          aria-invalid={!!errors.email}
-                          className={`px-3 py-2 rounded border ${errors.email ? 'border-red-400' : ''} bg-[var(--bg2)] w-full`}
-                        />
-                        {errors.email && <div className="text-xs text-red-400 mt-1">{errors.email}</div>}
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} custom={3}>
-                        <input
-                          placeholder="Subject"
-                          value={form.subject}
-                          onChange={(e) => { setForm({ ...form, subject: e.target.value }); if (e.target.value.trim().length > 0) setTouched(t => ({ ...t, subject: true })); }}
-                          onBlur={() => setTouched(t => ({ ...t, subject: true }))}
-                          aria-invalid={!!errors.subject}
-                          className={`px-3 py-2 rounded border ${errors.subject ? 'border-red-400' : ''} bg-[var(--bg2)] w-full`}
-                        />
-                        {errors.subject && <div className="text-xs text-red-400 mt-1">{errors.subject}</div>}
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} custom={4}>
-                        <textarea
-                          required
-                          placeholder="Message"
-                          value={form.message}
-                          onChange={(e) => { setForm({ ...form, message: e.target.value }); if (e.target.value.trim().length > 0) setTouched(t => ({ ...t, message: true })); }}
-                          onBlur={() => setTouched(t => ({ ...t, message: true }))}
-                          aria-invalid={!!errors.message}
-                          className={`px-3 py-2 rounded border ${errors.message ? 'border-red-400' : ''} bg-[var(--bg2)] h-32 resize-none w-full`}
-                        />
-                        <div className="flex items-center justify-between text-xs mt-1">
-                          <div className={` ${errors.message ? 'text-red-400' : 'text-[var(--text2)]'}`}>
-                            {form.message.trim() ? form.message.trim().split(/\s+/).filter(Boolean).length : 0}/{WORD_LIMIT} words
-                          </div>
-                          {errors.message && <div className="text-xs text-red-400">{errors.message}</div>}
-                        </div>
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} custom={5} className="flex items-center justify-between gap-4">
-                        <button type="submit" disabled={sending || !isFormValid} className="px-4 py-2 bg-[var(--cyan)] text-white rounded disabled:opacity-50">
-                          {sending ? 'Sending…' : 'Send'}
-                        </button>
-                        <button type="button" onClick={() => { setForm({ name: '', email: '', subject: '', message: '' }); setFormStatus(null); setErrors({}); setTouched({}); setSubmitAttempt(false); }} className="px-4 py-2 border rounded">
-                          Reset
-                        </button>
-                      </motion.div>
-
-                      <motion.div variants={itemVariants} custom={6}>
-                        {formStatus && <div className="text-sm mt-2">{formStatus}</div>}
-                      </motion.div>
-                    </div>
-                  </motion.form>
-                </motion.div>
-              </motion.div>
-            )}
-          </AnimatePresence>
+                {button.icon}
+                {button.name}
+              </motion.a>
+            ))}
+          </div>
         </div>
       </RevealWrapper>
 
-      {/* Toast Notification */}
+      {/* Modal Form */}
       <AnimatePresence>
-        {showToast && (
+        {showForm && (
           <motion.div
-            className="fixed bottom-8 right-8 bg-[var(--green)] text-white px-6 py-3 rounded-xl shadow-lg flex items-center gap-2 z-[1000]"
-            initial={{ opacity: 0, y: 20, scale: 0.9 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: 20, scale: 0.9 }}
-            style={{ boxShadow: "0 0 30px var(--green-glow)" }}
+            className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
           >
-            <motion.div
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ duration: 0.3 }}
-            >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
-              </svg>
+            <motion.div className="relative w-full max-w-lg mx-4" initial={{ scale: 0.95 }} animate={{ scale: 1 }} exit={{ scale: 0.95 }}>
+              <motion.form
+                onSubmit={sendEmail}
+                className="relative bg-[var(--bg2)] rounded-xl p-6 border border-[var(--cyan)]"
+                variants={containerVariants}
+                initial="hidden"
+                animate="show"
+                exit="hidden"
+              >
+                <motion.div variants={itemVariants} className="flex items-center justify-between mb-6">
+                  <h3 className="text-xl font-semibold text-[var(--text)]">Send a message</h3>
+                  <button type="button" onClick={() => setShowForm(false)} className="text-[var(--text3)] hover:text-[var(--text)] transition-colors">
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </button>
+                </motion.div>
+
+                <div className="space-y-4">
+                  <motion.div variants={itemVariants}>
+                    <input
+                      required
+                      placeholder="Your name"
+                      value={form.name}
+                      onChange={(e) => setForm({ ...form, name: e.target.value })}
+                      className={`px-4 py-3 rounded-lg border ${errors.name ? "border-red-400" : "border-[var(--border)]"} bg-[var(--bg)] text-[var(--text)] w-full focus:border-[var(--cyan)] focus:outline-none transition-colors`}
+                    />
+                    {errors.name && <div className="text-xs text-red-400 mt-1">{errors.name}</div>}
+                  </motion.div>
+
+                  <motion.div variants={itemVariants}>
+                    <input
+                      required
+                      placeholder="Your email"
+                      type="email"
+                      value={form.email}
+                      onChange={(e) => setForm({ ...form, email: e.target.value })}
+                      className={`px-4 py-3 rounded-lg border ${errors.email ? "border-red-400" : "border-[var(--border)]"} bg-[var(--bg)] text-[var(--text)] w-full focus:border-[var(--cyan)] focus:outline-none transition-colors`}
+                    />
+                    {errors.email && <div className="text-xs text-red-400 mt-1">{errors.email}</div>}
+                  </motion.div>
+
+                  <motion.div variants={itemVariants}>
+                    <input
+                      placeholder="Subject (optional)"
+                      value={form.subject}
+                      onChange={(e) => setForm({ ...form, subject: e.target.value })}
+                      className="px-4 py-3 rounded-lg border border-[var(--border)] bg-[var(--bg)] text-[var(--text)] w-full focus:border-[var(--cyan)] focus:outline-none transition-colors"
+                    />
+                  </motion.div>
+
+                  <motion.div variants={itemVariants}>
+                    <textarea
+                      required
+                      placeholder="Your message"
+                      value={form.message}
+                      onChange={(e) => setForm({ ...form, message: e.target.value })}
+                      className={`px-4 py-3 rounded-lg border ${errors.message ? "border-red-400" : "border-[var(--border)]"} bg-[var(--bg)] text-[var(--text)] w-full h-32 resize-none focus:border-[var(--cyan)] focus:outline-none transition-colors`}
+                    />
+                    {errors.message && <div className="text-xs text-red-400 mt-1">{errors.message}</div>}
+                  </motion.div>
+
+                  <motion.div variants={itemVariants} className="flex items-center justify-between pt-2">
+                    <button
+                      type="button"
+                      onClick={() => setShowForm(false)}
+                      className="px-5 py-2.5 text-[var(--text3)] hover:text-[var(--text)] transition-colors"
+                    >
+                      Cancel
+                    </button>
+                    <button
+                      type="submit"
+                      disabled={sending}
+                      className="px-6 py-2.5 bg-[var(--cyan)] text-[var(--bg)] rounded-lg font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
+                    >
+                      {sending ? "Sending..." : "Send Message"}
+                    </button>
+                  </motion.div>
+
+                  {formStatus && (
+                    <motion.div
+                      variants={itemVariants}
+                      className={`text-sm text-center ${formStatus.includes("thank") ? "text-[var(--green)]" : "text-red-400"}`}
+                    >
+                      {formStatus}
+                    </motion.div>
+                  )}
+                </div>
+              </motion.form>
             </motion.div>
-            Email copied to clipboard!
           </motion.div>
         )}
       </AnimatePresence>

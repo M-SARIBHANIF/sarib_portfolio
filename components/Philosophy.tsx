@@ -6,38 +6,50 @@ import { RevealWrapper } from "./RevealWrapper";
 
 const philosophies = [
   {
-    title: "Architect First",
+    title: "Precision Over Speed",
     description:
-      "Before writing code, I design systems that scale. Good architecture prevents technical debt and enables rapid iteration.",
-    color: "blue",
+      "I've been shooting since age 6. At 16, I hit a matchstick from 150 feet with open sights, no support. That kind of discipline — patience, control, focus — carries into how I approach engineering.",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-8 h-8">
-        <rect x="3" y="3" width="7" height="7" />
-        <rect x="14" y="3" width="7" height="7" />
-        <rect x="14" y="14" width="7" height="7" />
-        <rect x="3" y="14" width="7" height="7" />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
+        <circle cx="12" cy="12" r="10" />
+        <circle cx="12" cy="12" r="6" />
+        <circle cx="12" cy="12" r="2" />
       </svg>
     ),
   },
   {
-    title: "Automate Everything",
+    title: "Systems Thinking",
     description:
-      "Manual processes are error-prone. I build pipelines, scripts, and tools that eliminate repetitive tasks and ensure consistency.",
-    color: "purple",
+      "I don't just test features; I trace problems to their source. Understanding how components interact, where failures cascade, and how to build resilient architectures.",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-8 h-8">
-        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2" />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
+        <path d="M12 2L2 7l10 5 10-5-10-5z" />
+        <path d="M2 17l10 5 10-5" />
+        <path d="M2 12l10 5 10-5" />
       </svg>
     ),
   },
   {
-    title: "Ship Then Iterate",
+    title: "Ownership & Trust",
     description:
-      "Perfect is the enemy of done. I ship functional products quickly, then iterate based on real user feedback and data.",
-    color: "green",
+      "The best teams treat QA as engineering, not gatekeeping. I take ownership of the systems I work on — from test strategy to infrastructure to shipping reliable code.",
     icon: (
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-8 h-8">
-        <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z" />
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+      </svg>
+    ),
+  },
+  {
+    title: "Clean & Efficient",
+    description:
+      "I run Fedora because Windows is bloated. I brew V60 pour-over because instant coffee is lazy. I write clean code because complexity is a liability.",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
+        <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
+        <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" />
+        <line x1="6" y1="2" x2="6" y2="4" />
+        <line x1="10" y1="2" x2="10" y2="4" />
+        <line x1="14" y1="2" x2="14" y2="4" />
       </svg>
     ),
   },
@@ -47,49 +59,48 @@ export function Philosophy() {
   const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
   return (
-    <section id="philosophy" className="py-20 px-8 md:px-12 bg-[var(--bg)]">
+    <section id="philosophy" className="py-24 px-8 md:px-12 lg:px-16 bg-[var(--bg)]">
       <RevealWrapper>
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-4xl">
           {/* Section Header */}
-          <div className="mb-16 flex items-baseline gap-4">
-            <span className="text-[var(--cyan)] font-mono text-lg font-bold">06.</span>
-            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)]">
-              Philosophy
-            </h2>
+          <div className="section-header">
+            <span className="section-number">06.</span>
+            <h2 className="section-title">Philosophy</h2>
+            <div className="section-line" />
           </div>
 
-          <p className="text-[var(--text-muted)] mb-12 max-w-2xl">
+          {/* Intro Text */}
+          <p className="text-[var(--text2)] mb-10 max-w-2xl">
             Quality isn&apos;t a phase in the pipeline — it&apos;s a mindset that runs through everything I build.
           </p>
 
-          {/* Cards Grid */}
-          <div className="grid md:grid-cols-2 gap-8 mb-12">
+          {/* Cards Grid - 2x2 */}
+          <div className="grid md:grid-cols-2 gap-6">
             {philosophies.map((item, index) => {
               const isHovered = hoveredCard === index;
               return (
                 <motion.div
                   key={item.title}
-                  className="relative"
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
-                  onHoverStart={() => setHoveredCard(index)}
-                  onHoverEnd={() => setHoveredCard(null)}
+                  onMouseEnter={() => setHoveredCard(index)}
+                  onMouseLeave={() => setHoveredCard(null)}
                 >
-                  <div className="p-6 rounded-lg border border-[var(--border)] bg-[var(--bg3)] transition-all duration-300 hover:border-[var(--cyan)] h-full">
+                  <div className={`card h-full transition-all duration-300 ${isHovered ? "border-[var(--cyan)]" : ""}`}>
                     {/* Icon */}
-                    <div className="w-10 h-10 rounded-lg bg-[var(--cyan)] bg-opacity-10 flex items-center justify-center mb-4 text-[var(--cyan)]">
+                    <div className={`card-icon transition-all ${isHovered ? "scale-110" : ""}`}>
                       {item.icon}
                     </div>
 
                     {/* Title */}
-                    <h3 className="text-lg font-bold text-[var(--text)] mb-3">
+                    <h3 className={`text-base font-semibold mb-3 transition-colors ${isHovered ? "text-[var(--cyan)]" : "text-[var(--text)]"}`}>
                       {item.title}
                     </h3>
 
                     {/* Description */}
-                    <p className="text-sm text-[var(--text-muted)] leading-relaxed">
+                    <p className="text-sm text-[var(--text2)] leading-relaxed">
                       {item.description}
                     </p>
                   </div>
@@ -97,8 +108,6 @@ export function Philosophy() {
               );
             })}
           </div>
-
-
         </div>
       </RevealWrapper>
     </section>
