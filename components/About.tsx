@@ -135,100 +135,52 @@ export function About() {
             </h2>
           </div>
 
-          {/* Content Grid */}
-          <div className="grid lg:grid-cols-2 gap-16 mb-16">
-            {/* Left - Prose */}
-            <div className="space-y-6 text-lg text-[var(--text2)] leading-relaxed">
+          {/* Content */}
+          <div className="max-w-2xl mb-12">
+            <div className="space-y-4 text-[var(--text-muted)]">
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                dangerouslySetInnerHTML={{
-                  __html: highlightWords(
-                    "I'm a Full Stack Developer based in Islamabad, Pakistan, with over 3 years of experience building web applications and scalable backend systems.",
-                    ["Full Stack Developer", "3 years"]
-                  ),
-                }}
-              />
+                className="leading-relaxed"
+              >
+                I&apos;m a Full Stack Developer based in Islamabad, Pakistan, with over 3 years of experience building web applications and scalable backend systems.
+              </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
-                dangerouslySetInnerHTML={{
-                  __html: highlightWords(
-                    "My expertise spans across React, Node.js, FastAPI, and Docker. I'm passionate about writing clean, maintainable code and building systems that can scale.",
-                    ["React", "Node.js", "FastAPI", "Docker"]
-                  ),
-                }}
-              />
+                className="leading-relaxed"
+              >
+                My expertise spans across React, Node.js, FastAPI, and Docker. I&apos;m passionate about writing clean, maintainable code and building systems that can scale.
+              </motion.p>
               <motion.p
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ delay: 0.2 }}
-                dangerouslySetInnerHTML={{
-                  __html: highlightWords(
-                    "When I'm not coding, you'll find me exploring new technologies, contributing to open-source projects, or optimizing development workflows with DevOps practices.",
-                    ["DevOps", "open-source"]
-                  ),
-                }}
-              />
-            </div>
-
-            {/* Right - Stats Grid */}
-            <div ref={ref} className="grid grid-cols-2 gap-4">
-              {stats.map((stat, index) => {
-                const isHovered = hoveredStat === index;
-                return (
-                  <motion.div
-                    key={stat.label}
-                    className={`relative p-6 bg-[var(--bg2)] border rounded-2xl overflow-hidden transition-all duration-300 ${
-                      isHovered ? `border-[var(--${stat.color})]` : "border-[var(--border)]"
-                    } gradient-border-glow`}
-                    initial={{ opacity: 0, scale: 0.9, y: 20 }}
-                    whileInView={{ opacity: 1, scale: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: index * 0.1 }}
-                    onHoverStart={() => setHoveredStat(index)}
-                    onHoverEnd={() => setHoveredStat(null)}
-                    whileHover={{ y: -4, scale: 1.02 }}
-                  >
-                    {/* Icon */}
-                    <motion.div
-                      className={`w-12 h-12 rounded-xl bg-[var(--${stat.color}-dim)] flex items-center justify-center mb-4 text-[var(--${stat.color})]`}
-                      animate={isHovered ? { 
-                        boxShadow: [`0 0 10px var(--${stat.color}-glow)`, `0 0 25px var(--${stat.color}-glow)`, `0 0 10px var(--${stat.color}-glow)`]
-                      } : {}}
-                      transition={{ duration: 1.5, repeat: isHovered ? Infinity : 0 }}
-                    >
-                      {stat.icon}
-                    </motion.div>
-
-                    <CountUp
-                      target={stat.value}
-                      suffix={stat.suffix}
-                      inView={inView}
-                      color={stat.color}
-                    />
-                    <p className="text-sm text-[var(--text3)] mt-2">
-                      {stat.label}
-                    </p>
-
-                    {/* Background glow on hover */}
-                    <motion.div
-                      className={`absolute inset-0 bg-[var(--${stat.color}-dim)] opacity-0 pointer-events-none`}
-                      animate={{ opacity: isHovered ? 0.2 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    />
-                  </motion.div>
-                );
-              })}
+                className="leading-relaxed"
+              >
+                When I&apos;m not coding, you&apos;ll find me exploring new technologies, contributing to open-source projects, or optimizing development workflows with DevOps practices.
+              </motion.p>
             </div>
           </div>
 
-          {/* Tech Ticker */}
-          <TechTicker />
+          {/* Tech Stack Terminal Style */}
+          <div className="bg-[var(--bg3)] border border-[var(--border)] rounded-lg p-6 mb-12">
+            <div className="flex gap-2 mb-4">
+              <div className="w-3 h-3 rounded-full bg-red-500" />
+              <div className="w-3 h-3 rounded-full bg-yellow-500" />
+              <div className="w-3 h-3 rounded-full bg-green-500" />
+            </div>
+            <div className="font-mono text-sm text-[var(--text-muted)]">
+              <div className="mb-2"><span className="text-[var(--cyan)]">$</span> cat interests.txt</div>
+              <div className="text-[var(--text)]">automation, systems, clean code, coffee</div>
+            </div>
+          </div>
+
+
         </div>
       </RevealWrapper>
     </section>

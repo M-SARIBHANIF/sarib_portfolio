@@ -119,7 +119,7 @@ export function ParallelHero() {
       </div>
 
       {/* Navigation Links */}
-      <nav className="flex flex-col gap-2">
+      <nav className="flex flex-col gap-3">
         {[
           { id: "about", label: "ABOUT" },
           { id: "skills", label: "SKILLS" },
@@ -131,7 +131,7 @@ export function ParallelHero() {
           <a
             key={id}
             href={`#${id}`}
-            className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--cyan)] transition-colors opacity-60 hover:opacity-100"
+            className="text-xs font-mono text-[var(--text-muted)] hover:text-[var(--cyan)] hover:border-l-2 hover:border-[var(--cyan)] hover:pl-2 transition-all py-1"
           >
             {label}
           </a>
