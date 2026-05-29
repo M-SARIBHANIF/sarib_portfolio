@@ -1,21 +1,20 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { Sidebar } from "@/components/Sidebar";
-import { Hero } from "@/components/Hero";
 import { About } from "@/components/About";
 import { Skills } from "@/components/Skills";
 import { Experience } from "@/components/Experience";
 import { Projects } from "@/components/Projects";
 import { Philosophy } from "@/components/Philosophy";
 import { Contact } from "@/components/Contact";
+import { ParallelHero } from "@/components/ParallelHero";
 
 export default function Home() {
   const [isMobile, setIsMobile] = useState(false);
 
   useEffect(() => {
     const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 1024);
     };
     checkMobile();
     window.addEventListener("resize", checkMobile);
@@ -24,15 +23,18 @@ export default function Home() {
 
   return (
     <main className="relative min-h-screen bg-[var(--bg)]">
-      {/* Two-column layout: Sidebar + Content */}
+      {/* True Parallel Layout */}
       <div className="flex">
-        {/* Fixed Sidebar */}
-        {!isMobile && <Sidebar />}
+        {/* Left Column: Sticky Hero Info */}
+        {!isMobile && (
+          <div className="fixed left-0 top-0 w-1/2 h-screen overflow-y-auto border-r border-[var(--border)]">
+            <ParallelHero />
+          </div>
+        )}
 
-        {/* Main Content Area */}
-        <div className="flex-1 ml-0 md:ml-[320px]">
+        {/* Right Column: Scrollable Content */}
+        <div className={`w-full ${!isMobile ? 'ml-[50%]' : ''}`}>
           <div className="relative z-10">
-            <Hero />
             <About />
             <Skills />
             <Experience />

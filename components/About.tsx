@@ -110,7 +110,7 @@ export function About() {
   };
 
   return (
-    <section id="about" className="py-32 pl-[calc(56px+2rem)] pr-8 relative overflow-hidden">
+    <section id="about" className="py-20 px-8 md:px-12 bg-[var(--bg)] relative overflow-hidden">
       {/* Background decoration */}
       <div className="absolute inset-0 pointer-events-none">
         <motion.div 
@@ -128,25 +128,11 @@ export function About() {
       <RevealWrapper>
         <div className="max-w-6xl mx-auto relative z-10">
           {/* Section Header */}
-          <div className="mb-16 text-center md:text-left">
-            <motion.span 
-              className="text-sm font-mono text-[var(--blue)] mb-2 block"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              {"// 01"}
-            </motion.span>
-            <motion.h2 
-              className="text-4xl md:text-6xl font-bold"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              style={{ textShadow: "0 0 30px var(--blue-glow)" }}
-            >
+          <div className="mb-16 flex items-baseline gap-4">
+            <span className="text-[var(--cyan)] font-mono text-lg font-bold">01.</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)]">
               About Me
-            </motion.h2>
+            </h2>
           </div>
 
           {/* Content Grid */}
