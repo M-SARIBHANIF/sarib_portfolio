@@ -127,216 +127,88 @@ export function Experience() {
   const [hoveredIndex, setHoveredIndex] = useState<number | null>(null);
 
   return (
-    <section id="experience" className="py-32 pl-[calc(56px+2rem)] pr-8 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none">
-        <div className="absolute top-1/4 right-0 w-96 h-96 bg-[var(--blue)] opacity-[0.02] rounded-full blur-3xl" />
-        <div className="absolute bottom-1/4 left-0 w-96 h-96 bg-[var(--purple)] opacity-[0.02] rounded-full blur-3xl" />
-      </div>
-
+    <section id="experience" className="py-20 px-8 md:px-12 bg-[var(--bg)] relative overflow-hidden">
       <RevealWrapper>
-        <div className="max-w-5xl mx-auto relative z-10">
+        <div className="max-w-6xl mx-auto relative z-10">
           {/* Section Header */}
-          <div className="mb-20 text-center">
-            <motion.span 
-              className="text-sm font-mono text-[var(--blue)] mb-2 block"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              {"// 03"}
-            </motion.span>
-            <motion.h2 
-              className="text-4xl md:text-6xl font-bold text-glow-purple"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
+          <div className="mb-16 flex items-baseline gap-4">
+            <span className="text-[var(--cyan)] font-mono text-lg font-bold">03.</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)]">
               Experience
-            </motion.h2>
-            <motion.p
-              className="text-[var(--text2)] mt-4 max-w-2xl mx-auto"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              My professional journey building impactful digital solutions
-            </motion.p>
+            </h2>
           </div>
 
-          {/* Timeline */}
-          <div className="relative">
-            {/* Animated Vertical Line */}
-            <motion.div 
-              className="absolute left-8 md:left-12 top-0 bottom-0 w-[2px]"
-              initial={{ height: 0 }}
-              whileInView={{ height: "100%" }}
-              viewport={{ once: true }}
-              transition={{ duration: 1.5, ease: "easeInOut" }}
-            >
-              <div className="w-full h-full bg-gradient-to-b from-[var(--green)] via-[var(--purple)] to-[var(--blue)]" />
-              {/* Glowing orb that travels down */}
-              <motion.div
-                className="absolute left-1/2 -translate-x-1/2 w-3 h-3 rounded-full bg-white"
-                style={{ boxShadow: "0 0 20px var(--blue), 0 0 40px var(--blue)" }}
-                animate={{ top: ["0%", "100%"] }}
-                transition={{ duration: 5, repeat: Infinity, ease: "linear" }}
-              />
-            </motion.div>
-
-            {/* Experience Items */}
-            <div className="space-y-8">
+          {/* Experience Items */}
+          <div className="space-y-6">
               {experiences.map((exp, index) => {
-                const colors = getColorClasses(exp.color);
                 const isHovered = hoveredIndex === index;
                 
                 return (
                   <motion.div
                     key={exp.company}
-                    className="relative pl-20 md:pl-28"
-                    initial={{ opacity: 0, x: -50 }}
-                    whileInView={{ opacity: 1, x: 0 }}
+                    className="relative"
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
-                    transition={{ delay: index * 0.2, duration: 0.5 }}
+                    transition={{ delay: index * 0.1 }}
                     onHoverStart={() => setHoveredIndex(index)}
                     onHoverEnd={() => setHoveredIndex(null)}
                   >
-                    {/* Timeline Node */}
-                    <motion.div
-                      className={`absolute left-4 md:left-8 top-8 w-8 h-8 md:w-10 md:h-10 rounded-xl ${colors.dim} flex items-center justify-center border ${colors.border} z-10`}
-                      animate={isHovered || exp.current ? { 
-                        boxShadow: [`0 0 10px var(--${exp.color}-glow)`, `0 0 25px var(--${exp.color}-glow)`, `0 0 10px var(--${exp.color}-glow)`]
-                      } : {}}
-                      transition={{ duration: 1.5, repeat: isHovered || exp.current ? Infinity : 0 }}
-                    >
-                      <span className={colors.text}>{exp.icon}</span>
-                    </motion.div>
-
-                    {/* Connector line */}
-                    <div className={`absolute left-[3.25rem] md:left-[4.25rem] top-12 w-8 md:w-12 h-[2px] ${colors.dim}`} />
-
                     {/* Card */}
-                    <motion.div
-                      className={`relative p-6 md:p-8 rounded-2xl border transition-all duration-500 overflow-hidden ${
-                        isHovered 
-                          ? `border-[var(--${exp.color})] bg-[var(--bg2)]` 
-                          : "border-[var(--border)] bg-[var(--bg2)]"
-                      } gradient-border-glow`}
-                      whileHover={{ y: -4, scale: 1.01 }}
-                    >
-                      {/* Background glow on hover */}
-                      <motion.div
-                        className={`absolute inset-0 ${colors.dim} opacity-0`}
-                        animate={{ opacity: isHovered ? 0.3 : 0 }}
-                        transition={{ duration: 0.3 }}
-                      />
-                      
-                      {/* Card pattern */}
-                      <div className="absolute inset-0 opacity-5">
-                        <svg className="w-full h-full" viewBox="0 0 100 100">
-                          <defs>
-                            <pattern id={`dots-${index}`} x="0" y="0" width="10" height="10" patternUnits="userSpaceOnUse">
-                              <circle cx="2" cy="2" r="1" fill="currentColor" />
-                            </pattern>
-                          </defs>
-                          <rect width="100%" height="100%" fill={`url(#dots-${index})`} />
-                        </svg>
+                    <div className="p-6 rounded-lg border border-[var(--border)] bg-[var(--bg3)] transition-all duration-300 hover:border-[var(--cyan)]">
+                      {/* Period */}
+                      <div className="text-xs font-mono text-[var(--text-muted)] mb-3 opacity-70">
+                        {exp.period}
                       </div>
 
-                      <div className="relative z-10">
-                        {/* Header */}
-                        <div className="flex flex-wrap items-start justify-between gap-4 mb-6">
-                          <div>
-                            <motion.h3 
-                              className={`text-xl md:text-2xl font-bold transition-colors ${isHovered ? colors.text : "text-[var(--text)]"}`}
-                              style={isHovered ? { textShadow: `0 0 20px var(--${exp.color}-glow)` } : {}}
-                            >
-                              {exp.company}
-                            </motion.h3>
-                            <p className="text-[var(--text2)] mt-1 flex items-center gap-2">
-                              <span className={`w-2 h-2 rounded-full ${colors.bg}`} />
-                              {exp.role}
-                            </p>
-                          </div>
-                          <div className="flex flex-col items-end gap-2">
-                            <span className="text-sm font-mono text-[var(--text3)] bg-[var(--bg3)] px-3 py-1 rounded-lg">
-                              {exp.period}
-                            </span>
-                            {exp.current && exp.startDate && (
-                              <TenureCalculator startDate={exp.startDate} />
-                            )}
-                          </div>
-                        </div>
-
-                        {/* Achievements */}
-                        {exp.achievements.length > 0 && (
-                          <div className="flex flex-wrap gap-3 mb-6">
-                            {exp.achievements.map((achievement, i) => (
-                              <motion.div
-                                key={i}
-                                className={`px-4 py-2 rounded-xl ${colors.dim} border ${colors.border}`}
-                                initial={{ scale: 0 }}
-                                whileInView={{ scale: 1 }}
-                                viewport={{ once: true }}
-                                transition={{ delay: 0.3 + i * 0.1 }}
-                              >
-                                <span className={`text-xl font-bold ${colors.text} block`}>{achievement.metric}</span>
-                                <span className="text-xs text-[var(--text3)]">{achievement.label}</span>
-                              </motion.div>
-                            ))}
-                          </div>
-                        )}
-
-                        {/* Description */}
-                        <ul className="space-y-3 mb-6">
-                          {exp.description.map((item, i) => (
-                            <motion.li
-                              key={i}
-                              className="text-[var(--text2)] text-sm flex items-start gap-3"
-                              initial={{ opacity: 0, x: -20 }}
-                              whileInView={{ opacity: 1, x: 0 }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 0.1 * i }}
-                            >
-                              <span className={`${colors.text} mt-1 flex-shrink-0`}>
-                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" className="w-4 h-4">
-                                  <path d="M5 12h14M12 5l7 7-7 7" />
-                                </svg>
-                              </span>
-                              {item}
-                            </motion.li>
-                          ))}
-                        </ul>
-
-                        {/* Technologies */}
-                        <div className="flex flex-wrap gap-2">
-                          {exp.technologies.map((tech, i) => (
-                            <motion.span
-                              key={tech}
-                              className={`text-xs font-mono px-3 py-1.5 rounded-lg transition-all ${
-                                isHovered 
-                                  ? `${colors.dim} ${colors.text} ${colors.border} border` 
-                                  : "bg-[var(--bg3)] text-[var(--text2)]"
-                              }`}
-                              initial={{ opacity: 0, scale: 0.8 }}
-                              whileInView={{ opacity: 1, scale: 1 }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 0.05 * i }}
-                              whileHover={{ scale: 1.1, y: -2 }}
-                            >
-                              {tech}
-                            </motion.span>
-                          ))}
+                      {/* Header */}
+                      <div className="flex items-start justify-between gap-4 mb-4">
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-[var(--text)] mb-1 flex items-center gap-2">
+                            <span className="w-2 h-2 rounded-full bg-[var(--cyan)]" />
+                            {exp.company}
+                          </h3>
+                          <p className="text-sm text-[var(--text-muted)]">
+                            {exp.role}
+                          </p>
                         </div>
                       </div>
-                    </motion.div>
+
+                      {/* Description with checkmarks */}
+                      <ul className="space-y-2 mb-4">
+                        {exp.description.map((item, i) => (
+                          <motion.li
+                            key={i}
+                            className="text-sm text-[var(--text-muted)] flex items-start gap-3"
+                            initial={{ opacity: 0, x: -20 }}
+                            whileInView={{ opacity: 1, x: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: index * 0.1 + i * 0.05 }}
+                          >
+                            <svg className="w-4 h-4 text-[var(--cyan)] flex-shrink-0 mt-0.5" fill="currentColor" viewBox="0 0 24 24">
+                              <path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/>
+                            </svg>
+                            {item}
+                          </motion.li>
+                        ))}
+                      </ul>
+
+                      {/* Technologies */}
+                      <div className="flex flex-wrap gap-2">
+                        {exp.technologies.map((tech) => (
+                          <span
+                            key={tech}
+                            className="text-xs font-mono px-2.5 py-1 rounded border border-[var(--border)] text-[var(--text-muted)]"
+                          >
+                            {tech}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
                   </motion.div>
                 );
               })}
             </div>
-          </div>
         </div>
       </RevealWrapper>
     </section>

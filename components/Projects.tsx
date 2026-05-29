@@ -133,7 +133,7 @@ export function Projects() {
   return (
     <section
       id="projects"
-      className="py-32 pl-[calc(56px+2rem)] pr-8 bg-[var(--bg2)] relative overflow-hidden"
+      className="py-20 px-8 md:px-12 bg-[var(--bg)] relative overflow-hidden"
     >
       {/* Background elements */}
       <div className="absolute inset-0 pointer-events-none">
@@ -142,39 +142,17 @@ export function Projects() {
       </div>
 
       <RevealWrapper>
-        <div className="max-w-7xl mx-auto relative z-10">
+        <div className="max-w-6xl mx-auto relative z-10">
           {/* Section Header */}
-          <div className="mb-20 text-center">
-            <motion.span 
-              className="text-sm font-mono text-[var(--blue)] mb-2 block"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              {"// 04"}
-            </motion.span>
-            <motion.h2 
-              className="text-4xl md:text-6xl font-bold text-glow-cyan"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-            >
+          <div className="mb-16 flex items-baseline gap-4">
+            <span className="text-[var(--cyan)] font-mono text-lg font-bold">05.</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)]">
               Projects
-            </motion.h2>
-            <motion.p
-              className="text-[var(--text2)] mt-4 max-w-2xl mx-auto"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              Crafting solutions that make a difference
-            </motion.p>
+            </h2>
           </div>
 
           {/* Projects Grid */}
-          <div className="grid md:grid-cols-2 gap-6">
+          <div className="space-y-6">
             {projects.map((project, index) => {
               const colors = getColorClasses(project.color);
               const isHovered = hoveredProject === project.title;
@@ -183,173 +161,65 @@ export function Projects() {
               return (
                 <motion.div
                   key={project.title}
-                  className={`relative group ${isFeatured ? "md:col-span-2" : ""}`}
-                  initial={{ opacity: 0, y: 30 }}
+                  className="relative group"
+                  initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.1 }}
                   onHoverStart={() => setHoveredProject(project.title)}
                   onHoverEnd={() => setHoveredProject(null)}
                 >
-                  <motion.div
-                    className={`relative overflow-hidden rounded-2xl border bg-[var(--bg)] transition-all duration-500 ${
-                      isHovered ? `${colors.border} ${colors.glow}` : "border-[var(--border)]"
-                    } ${isFeatured ? "min-h-[350px]" : "min-h-[300px]"}`}
-                    whileHover={{ y: -8, scale: 1.01 }}
+                  <div
+                    className={`relative overflow-hidden rounded-lg border bg-[var(--bg3)] transition-all duration-300 p-6 ${
+                      isHovered ? `${colors.border} border-2` : "border-[var(--border)]"
+                    }`}
                   >
-                    {/* Animated gradient border */}
-                    <motion.div
-                      className={`absolute inset-0 rounded-2xl bg-gradient-to-r ${colors.gradient} opacity-0 -z-10`}
-                      animate={{ opacity: isHovered ? 0.1 : 0 }}
-                      transition={{ duration: 0.3 }}
-                    />
-
-                    {/* Circuit Board Background */}
-                    <svg
-                      className="absolute inset-0 w-full h-full opacity-[0.03] pointer-events-none"
-                      viewBox="0 0 400 300"
-                    >
-                      <pattern
-                        id={`circuit-${index}`}
-                        x="0"
-                        y="0"
-                        width="50"
-                        height="50"
-                        patternUnits="userSpaceOnUse"
-                      >
-                        <path
-                          d="M0 25h15M25 0v15M35 25h15M25 35v15"
-                          stroke="currentColor"
-                          strokeWidth="1"
-                          fill="none"
-                        />
-                        <circle cx="25" cy="25" r="4" fill="none" stroke="currentColor" strokeWidth="1" />
-                        <circle cx="25" cy="25" r="2" fill="currentColor" />
-                      </pattern>
-                      <rect
-                        width="100%"
-                        height="100%"
-                        fill={`url(#circuit-${index})`}
-                      />
-                    </svg>
-
-                    {/* Large Faint Number */}
-                    <motion.div 
-                      className="absolute -right-4 -bottom-8 text-[180px] font-bold text-[var(--border)] opacity-30 pointer-events-none select-none"
-                      animate={{ opacity: isHovered ? 0.5 : 0.3 }}
-                    >
-                      {String(index + 1).padStart(2, "0")}
-                    </motion.div>
-
-                    {/* Glowing orbs on hover */}
-                    <motion.div
-                      className={`absolute -top-20 -right-20 w-40 h-40 rounded-full ${colors.dim}`}
-                      animate={{ 
-                        scale: isHovered ? 1.5 : 1, 
-                        opacity: isHovered ? 0.6 : 0 
-                      }}
-                      style={{ filter: "blur(60px)" }}
-                      transition={{ duration: 0.5 }}
-                    />
-
-                    {/* Content */}
-                    <div className="relative z-10 p-8 h-full flex flex-col">
-                      {/* Header */}
-                      <div className="flex items-start justify-between mb-6">
-                        <div className="flex items-center gap-4">
-                          {/* Glowing Icon */}
-                          <motion.div
-                            className={`w-16 h-16 rounded-2xl ${colors.dim} flex items-center justify-center relative border ${colors.border}`}
-                            animate={isHovered ? { 
-                              boxShadow: [`0 0 15px var(--${project.color}-glow)`, `0 0 30px var(--${project.color}-glow)`, `0 0 15px var(--${project.color}-glow)`]
-                            } : {}}
-                            transition={{ duration: 1.5, repeat: isHovered ? Infinity : 0 }}
-                          >
-                            <span className={colors.text}>{project.icon}</span>
-                            {/* Icon pulse effect */}
-                            <motion.div
-                              className={`absolute inset-0 rounded-2xl ${colors.dim}`}
-                              animate={isHovered ? { scale: [1, 1.5], opacity: [0.5, 0] } : {}}
-                              transition={{ duration: 1, repeat: isHovered ? Infinity : 0 }}
-                            />
-                          </motion.div>
-                          
-                          <div>
-                            {isFeatured && (
-                              <motion.span 
-                                className={`inline-block text-xs font-mono ${colors.text} ${colors.dim} px-2 py-1 rounded-full mb-2`}
-                                animate={isHovered ? { scale: [1, 1.05, 1] } : {}}
-                                transition={{ duration: 1, repeat: isHovered ? Infinity : 0 }}
-                              >
-                                Featured
-                              </motion.span>
-                            )}
-                            <motion.h3 
-                              className={`text-2xl md:text-3xl font-bold transition-all ${isHovered ? colors.text : "text-[var(--text)]"}`}
-                              style={isHovered ? { textShadow: `0 0 20px var(--${project.color}-glow)` } : {}}
-                            >
-                              {project.title}
-                            </motion.h3>
-                          </div>
-                        </div>
-
-                        {/* Stats */}
-                        <div className="hidden md:flex gap-3">
-                          {Object.entries(project.stats).map(([key, value], i) => (
-                            <motion.div
-                              key={key}
-                              className={`px-3 py-2 rounded-xl ${colors.dim} border ${isHovered ? colors.border : "border-transparent"} text-center transition-all`}
-                              initial={{ opacity: 0, y: -10 }}
-                              whileInView={{ opacity: 1, y: 0 }}
-                              viewport={{ once: true }}
-                              transition={{ delay: 0.2 + i * 0.1 }}
-                            >
-                              <span className={`text-lg font-bold ${colors.text} block`}>{value}</span>
-                              <span className="text-[10px] text-[var(--text3)] uppercase tracking-wider">{key}</span>
-                            </motion.div>
-                          ))}
-                        </div>
+                    {/* Header with folder icon */}
+                    <div className="flex items-start gap-4 mb-4">
+                      {/* Folder Icon */}
+                      <div className={`p-3 rounded-lg ${colors.dim} border ${isHovered ? colors.border : "border-[var(--border)]"} flex-shrink-0`}>
+                        <svg className={`w-5 h-5 ${colors.text}`} fill="currentColor" viewBox="0 0 24 24">
+                          <path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/>
+                        </svg>
                       </div>
 
-                      {/* Description */}
-                      <p className="text-[var(--text2)] mb-6 max-w-2xl leading-relaxed flex-grow">
-                        {project.description}
-                      </p>
-
-                      {/* Technologies */}
-                      <div className="flex flex-wrap gap-2">
-                        {project.technologies.map((tech, i) => (
-                          <motion.span
-                            key={tech}
-                            className={`text-xs font-mono px-4 py-2 rounded-xl transition-all border ${
-                              isHovered 
-                                ? `${colors.dim} ${colors.text} ${colors.border}` 
-                                : "bg-[var(--bg3)] text-[var(--text2)] border-transparent"
-                            }`}
-                            initial={{ opacity: 0, scale: 0.8 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            viewport={{ once: true }}
-                            transition={{ delay: 0.05 * i }}
-                            whileHover={{ 
-                              scale: 1.1, 
-                              y: -4,
-                              boxShadow: `0 4px 20px var(--${project.color}-glow)`
-                            }}
+                      <div className="flex-1">
+                        {/* Featured Badge */}
+                        {isFeatured && (
+                          <motion.span 
+                            className={`inline-block text-xs font-mono ${colors.text} ${colors.dim} px-2 py-1 rounded border ${colors.border} mb-2`}
                           >
-                            {tech}
+                            Featured
                           </motion.span>
-                        ))}
+                        )}
+                        {/* Title */}
+                        <h3 className={`text-xl font-bold transition-all ${isHovered ? colors.text : "text-[var(--text)]"}`}>
+                          {project.title}
+                        </h3>
                       </div>
-
-                      {/* Bottom decorative line */}
-                      <motion.div
-                        className={`absolute bottom-0 left-0 h-1 bg-gradient-to-r ${colors.gradient}`}
-                        initial={{ width: 0 }}
-                        animate={{ width: isHovered ? "100%" : "0%" }}
-                        transition={{ duration: 0.5 }}
-                      />
                     </div>
-                  </motion.div>
+
+                    {/* Description */}
+                    <p className="text-[var(--text-muted)] text-sm mb-4 leading-relaxed">
+                      {project.description}
+                    </p>
+
+                    {/* Technologies */}
+                    <div className="flex flex-wrap gap-2 pt-4 border-t border-[var(--border)]">
+                      {project.technologies.map((tech) => (
+                        <span
+                          key={tech}
+                          className={`text-xs font-mono px-2.5 py-1 rounded border transition-all ${
+                            isHovered 
+                              ? `${colors.dim} ${colors.text} ${colors.border}` 
+                              : "bg-transparent text-[var(--text-muted)] border-[var(--border)]"
+                          }`}
+                        >
+                          {tech}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
                 </motion.div>
               );
             })}

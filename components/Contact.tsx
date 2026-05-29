@@ -211,49 +211,15 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="py-32 pl-[calc(56px+2rem)] pr-8 relative overflow-hidden">
-      {/* Background decoration */}
-      <div className="absolute inset-0 pointer-events-none">
-        <motion.div 
-          className="absolute top-1/4 right-1/4 w-96 h-96 bg-[var(--blue)] opacity-[0.02] rounded-full blur-3xl"
-          animate={{ scale: [1, 1.2, 1], opacity: [0.02, 0.04, 0.02] }}
-          transition={{ duration: 8, repeat: Infinity }}
-        />
-      </div>
-
+    <section id="contact" className="py-20 px-8 md:px-12 bg-[var(--bg)]">
       <RevealWrapper>
-        <div className="max-w-4xl mx-auto relative z-10">
+        <div className="max-w-6xl mx-auto relative z-10">
           {/* Section Header */}
-          <div className="mb-16 text-center">
-            <motion.span 
-              className="text-sm font-mono text-[var(--blue)] mb-2 block"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-            >
-              {"// 07"}
-            </motion.span>
-            <motion.h2 
-              className="text-4xl md:text-6xl font-bold mb-4"
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              style={{ textShadow: "0 0 30px var(--cyan-glow)" }}
-            >
+          <div className="mb-12 flex items-baseline gap-4">
+            <span className="text-[var(--cyan)] font-mono text-lg font-bold">08.</span>
+            <h2 className="text-3xl md:text-4xl font-bold text-[var(--text)]">
               Get In Touch
-            </motion.h2>
-            <motion.p 
-              className="text-[var(--text2)] max-w-lg mx-auto"
-              initial={{ opacity: 0 }}
-              whileInView={{ opacity: 1 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.2 }}
-            >
-              I&apos;m currently open to new opportunities. Whether you have a
-              question or just want to say hi, I&apos;ll try my best to get back
-              to you!
-            </motion.p>
+            </h2>
           </div>
 
           {/* Terminal Card */}
