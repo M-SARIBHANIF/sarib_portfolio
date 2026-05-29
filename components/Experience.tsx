@@ -3,6 +3,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { RevealWrapper } from "./RevealWrapper";
+import Image from "next/image";
 
 const experiences = [
   {
@@ -11,13 +12,10 @@ const experiences = [
     period: "OCT 2024 — PRESENT",
     startDate: new Date("2024-10-01"),
     current: true,
-    url: "#",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-      </svg>
-    ),
-    color: "cyan",
+    url: "https://cymaxtech.com/",
+    icon: "/icons/cymax.svg",
+    iconType: "svg",
+    color: "accent",
     description: [
       "Led development of enterprise-grade web applications using React and Node.js",
       "Implemented microservices architecture improving system scalability by 40%",
@@ -31,12 +29,9 @@ const experiences = [
     role: "Backend Developer",
     period: "AUG 2024 — SEP 2024",
     current: false,
-    url: "#",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5 12h14M5 12a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v4a2 2 0 01-2 2M5 12a2 2 0 00-2 2v4a2 2 0 002 2h14a2 2 0 002-2v-4a2 2 0 00-2-2m-2-4h.01M17 16h.01" />
-      </svg>
-    ),
+    url: "https://www.horizon.com.pk/",
+    icon: "/icons/horizon.png",
+    iconType: "image",
     color: "blue",
     description: [
       "Developed RESTful APIs for client applications using FastAPI",
@@ -50,12 +45,9 @@ const experiences = [
     role: "Junior Developer",
     period: "JUN 2023 — SEP 2023",
     current: false,
-    url: "#",
-    icon: (
-      <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" strokeWidth={2}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4" />
-      </svg>
-    ),
+    url: "https://talkpool.com/",
+    icon: "/icons/lcc-pakistan.svg",
+    iconType: "svg",
     color: "green",
     description: [
       "Built responsive web interfaces using React and Tailwind CSS",
@@ -106,6 +98,31 @@ const CheckIcon = () => (
   </svg>
 );
 
+// Company Icon Component
+function CompanyIcon({ icon, iconType, company }: { icon: string; iconType: string; company: string }) {
+  return (
+    <div className="w-12 h-12 rounded-lg bg-[var(--bg3)] border border-[var(--border)] flex items-center justify-content overflow-hidden p-1.5">
+      {iconType === "svg" ? (
+        <Image
+          src={icon}
+          alt={`${company} logo`}
+          width={40}
+          height={40}
+          className="w-full h-full object-contain"
+        />
+      ) : (
+        <Image
+          src={icon}
+          alt={`${company} logo`}
+          width={40}
+          height={40}
+          className="w-full h-full object-contain rounded"
+        />
+      )}
+    </div>
+  );
+}
+
 export function Experience() {
   return (
     <section id="experience" className="py-24 px-8 md:px-12 lg:px-16 bg-[var(--bg)]">
@@ -142,27 +159,30 @@ export function Experience() {
 
                   {/* Right: Details */}
                   <div>
-                    {/* Company and Role */}
-                    <div className="mb-4">
-                      <h3 className="text-lg font-semibold text-[var(--text)] flex items-center gap-2">
-                        <span>{exp.role}</span>
-                        <span className="text-[var(--text3)]">.</span>
-                        <a 
-                          href={exp.url} 
-                          target="_blank" 
-                          rel="noopener noreferrer"
-                          className="text-[var(--cyan)] hover:underline inline-flex items-center gap-1"
-                        >
-                          {exp.company}
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                          </svg>
-                        </a>
-                      </h3>
+                    {/* Company and Role with Icon */}
+                    <div className="mb-4 flex items-start gap-4">
+                      <CompanyIcon icon={exp.icon} iconType={exp.iconType} company={exp.company} />
+                      <div>
+                        <h3 className="text-lg font-semibold text-[var(--text)] flex items-center gap-2 flex-wrap">
+                          <span>{exp.role}</span>
+                          <span className="text-[var(--text3)]">@</span>
+                          <a 
+                            href={exp.url} 
+                            target="_blank" 
+                            rel="noopener noreferrer"
+                            className="text-[var(--accent)] hover:underline inline-flex items-center gap-1"
+                          >
+                            {exp.company}
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                            </svg>
+                          </a>
+                        </h3>
+                      </div>
                     </div>
 
                     {/* Description with checkmarks */}
-                    <ul className="space-y-3 mb-6">
+                    <ul className="space-y-3 mb-6 ml-16">
                       {exp.description.map((item, i) => (
                         <motion.li
                           key={i}
@@ -179,7 +199,7 @@ export function Experience() {
                     </ul>
 
                     {/* Technologies */}
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-wrap gap-2 ml-16">
                       {exp.technologies.map((tech) => (
                         <span key={tech} className="tech-badge">
                           {tech}
