@@ -76,7 +76,7 @@ function TenureCalculator({ startDate }: { startDate: Date }) {
   }, [startDate]);
 
   return (
-    <span className="inline-flex items-center gap-1.5 text-[10px] font-mono text-[var(--green)] bg-[var(--green-dim)] px-2 py-1 rounded-full border border-[var(--green)]">
+    <span className="inline-flex items-center gap-1.5 text-[10px] font-mono text-[var(--green)] bg-[var(--green-dim)] px-2 py-1 rounded-full border border-[var(--green)] w-fit">
       <span className="w-1.5 h-1.5 rounded-full bg-[var(--green)] animate-pulse" />
       {tenure}
     </span>
@@ -141,13 +141,13 @@ const companyIcons: Record<string, React.FC<{ color: string }>> = {
 
 // Check icon component
 const CheckIcon = ({ color }: { color: string }) => (
-  <svg className="w-4 h-4 flex-shrink-0" viewBox="0 0 24 24" fill="none">
+  <svg className="w-4 h-4 flex-shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none">
     <circle cx="12" cy="12" r="10" stroke={color} strokeWidth="1.5" opacity="0.3" />
     <path d="M9 12l2 2 4-4" stroke={color} strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
   </svg>
 );
 
-// Experience Card with active section glow
+// Experience Card with active section glow AND hover lightup effect
 function ExperienceCard({ exp, index }: { exp: typeof experiences[0]; index: number }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { margin: "-40% 0px -40% 0px" });
@@ -156,102 +156,118 @@ function ExperienceCard({ exp, index }: { exp: typeof experiences[0]; index: num
   return (
     <motion.div
       ref={ref}
-      className="relative"
       initial={{ opacity: 0, y: 20 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true }}
       transition={{ delay: index * 0.1 }}
     >
-      {/* Active section glow background */}
-      <motion.div
-        className="absolute -inset-4 rounded-xl pointer-events-none"
-        style={{
-          background: `radial-gradient(ellipse at center, ${exp.color}08 0%, transparent 70%)`,
-          border: `1px solid ${isInView ? exp.color + '20' : 'transparent'}`,
-        }}
-        animate={{
-          opacity: isInView ? 1 : 0,
-          scale: isInView ? 1 : 0.98,
-        }}
-        transition={{ duration: 0.3 }}
-      />
-
-      <div className="relative grid md:grid-cols-[140px_1fr] gap-4">
-        {/* Left: Period */}
-        <div className="flex flex-col gap-1.5">
-          <span className="text-[10px] font-mono text-[var(--text3)] tracking-wider">
-            {exp.period}
-          </span>
-          {exp.current && exp.startDate && (
-            <TenureCalculator startDate={exp.startDate} />
-          )}
+      {/* Lightup Hover Container */}
+      <div className="group relative p-6 -mx-6 rounded-2xl transition-all duration-500 hover:bg-[var(--bg2)] border border-transparent hover:border-[var(--border)] overflow-hidden">
+        
+        {/* 1. Background Glows (Fades in on hover, color matches company) */}
+        <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 pointer-events-none z-0">
+          <div 
+            className="absolute -top-24 -right-24 w-96 h-96 rounded-full blur-[120px] opacity-10" 
+            style={{ backgroundColor: exp.color }}
+          />
+          <div 
+            className="absolute top-1/2 -left-24 w-64 h-64 rounded-full blur-[100px] opacity-[0.05]" 
+            style={{ backgroundColor: exp.color }}
+          />
         </div>
 
-        {/* Right: Details */}
-        <div>
-          {/* Company and Role with Icon */}
-          <div className="mb-3 flex items-start gap-3">
-            <div 
-              className="w-9 h-9 rounded-lg flex items-center justify-center p-1.5 flex-shrink-0"
-              style={{ 
-                backgroundColor: exp.color + '15',
-                border: `1px solid ${exp.color}30`
-              }}
-            >
-              {IconComponent && <IconComponent color={exp.color} />}
-            </div>
-            <div>
-              <h3 className="text-sm font-semibold text-[var(--text)] flex items-center gap-1.5 flex-wrap">
-                <span>{exp.role}</span>
-                <span className="text-[var(--text3)]">@</span>
-                <a 
-                  href={exp.url} 
-                  target="_blank" 
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 transition-colors"
-                  style={{ color: exp.color }}
-                >
-                  {exp.company}
-                  <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
-                  </svg>
-                </a>
-              </h3>
-            </div>
+        {/* 2. Original Active section glow background (Maintained as requested) */}
+        <motion.div
+          className="absolute inset-0 rounded-xl pointer-events-none z-0"
+          style={{
+            background: `radial-gradient(ellipse at center, ${exp.color}08 0%, transparent 70%)`,
+            border: `1px solid ${isInView ? exp.color + '20' : 'transparent'}`,
+          }}
+          animate={{
+            opacity: isInView ? 1 : 0,
+            scale: isInView ? 1 : 0.98,
+          }}
+          transition={{ duration: 0.3 }}
+        />
+
+        {/* 3. Card Content */}
+        <div className="relative z-10 grid md:grid-cols-[140px_1fr] gap-4">
+          {/* Left: Period */}
+          <div className="flex flex-col gap-1.5">
+            <span className="text-[10px] font-mono text-[var(--text3)] tracking-wider group-hover:text-[var(--text)] transition-colors duration-300">
+              {exp.period}
+            </span>
+            {exp.current && exp.startDate && (
+              <TenureCalculator startDate={exp.startDate} />
+            )}
           </div>
 
-          {/* Description with checkmarks */}
-          <ul className="space-y-2 mb-4 ml-12">
-            {exp.description.map((item, i) => (
-              <motion.li
-                key={i}
-                className="flex items-start gap-2 text-xs text-[var(--text2)] leading-relaxed"
-                initial={{ opacity: 0, x: -10 }}
-                whileInView={{ opacity: 1, x: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: index * 0.1 + i * 0.05 }}
-              >
-                <CheckIcon color={exp.color} />
-                <span>{item}</span>
-              </motion.li>
-            ))}
-          </ul>
-
-          {/* Technologies */}
-          <div className="flex flex-wrap gap-1.5 ml-12">
-            {exp.technologies.map((tech) => (
-              <span 
-                key={tech} 
-                className="text-[10px] font-mono px-2 py-0.5 rounded border transition-colors"
-                style={{
-                  color: exp.color,
-                  borderColor: exp.color + '30',
-                  backgroundColor: exp.color + '08',
+          {/* Right: Details */}
+          <div>
+            {/* Company and Role with Icon */}
+            <div className="mb-3 flex items-start gap-3">
+              <div 
+                className="w-9 h-9 rounded-lg flex items-center justify-center p-1.5 flex-shrink-0 transition-transform duration-300 group-hover:scale-105"
+                style={{ 
+                  backgroundColor: exp.color + '15',
+                  border: `1px solid ${exp.color}30`
                 }}
               >
-                {tech}
-              </span>
-            ))}
+                {IconComponent && <IconComponent color={exp.color} />}
+              </div>
+              <div>
+                <h3 className="text-sm font-semibold text-[var(--text)] flex items-center gap-1.5 flex-wrap">
+                  <span>{exp.role}</span>
+                  <span className="text-[var(--text3)]">@</span>
+                  <a 
+                    href={exp.url} 
+                    target="_blank" 
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-1 transition-opacity hover:opacity-80"
+                    style={{ color: exp.color }}
+                  >
+                    {exp.company}
+                    <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
+                    </svg>
+                  </a>
+                </h3>
+              </div>
+            </div>
+
+            {/* Description with checkmarks */}
+            <ul className="space-y-2 mb-4 ml-12">
+              {exp.description.map((item, i) => (
+                <motion.li
+                  key={i}
+                  className="flex items-start gap-2 text-xs text-[var(--text2)] leading-relaxed group-hover:text-[var(--text)] transition-colors duration-300"
+                  initial={{ opacity: 0, x: -10 }}
+                  whileInView={{ opacity: 1, x: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: index * 0.1 + i * 0.05 }}
+                >
+                  <CheckIcon color={exp.color} />
+                  <span>{item}</span>
+                </motion.li>
+              ))}
+            </ul>
+
+            {/* Technologies */}
+            <div className="flex flex-wrap gap-1.5 ml-12">
+              {exp.technologies.map((tech) => (
+                <span 
+                  key={tech} 
+                  className="text-[10px] font-mono px-2 py-0.5 rounded border transition-all duration-300"
+                  style={{
+                    color: exp.color,
+                    borderColor: exp.color + '30',
+                    backgroundColor: exp.color + '08',
+                  }}
+                >
+                  {tech}
+                </span>
+              ))}
+            </div>
           </div>
         </div>
       </div>

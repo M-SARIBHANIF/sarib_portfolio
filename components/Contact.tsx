@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef, type FormEvent, type ReactNode } from "react";
+import { useState, useEffect, type FormEvent, type ReactNode } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
 import { RevealWrapper } from "./RevealWrapper";
 
@@ -143,9 +143,10 @@ export function Contact() {
   };
 
   return (
-    <section id="contact" className="py-16 px-6 md:px-10 lg:px-14 bg-[var(--bg)]">
+    <section id="contact" className="py-16 px-6 md:px-10 lg:px-14 bg-[var(--bg)] w-full">
       <RevealWrapper>
-        <div className="max-w-3xl">
+        {/* Changed max-w-3xl to w-full max-w-4xl to give it more room */}
+        <div className="w-full max-w-4xl">
           {/* Section Header */}
           <div className="section-header mb-8">
             <span className="section-number text-sm">08.</span>
@@ -155,7 +156,8 @@ export function Contact() {
 
           {/* Terminal Code Block */}
           <motion.div
-            className="terminal-window max-w-md mb-8"
+            /* Changed max-w-md to w-full */
+            className="terminal-window w-full mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}

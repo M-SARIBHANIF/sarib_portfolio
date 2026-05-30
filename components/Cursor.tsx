@@ -1,16 +1,20 @@
 "use client";
 
 import { useEffect, useState, useRef } from "react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 export function Cursor() {
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [ringPos, setRingPos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const [isClicked, setIsClicked] = useState(false);
   const [trail, setTrail] = useState<{ x: number; y: number; id: number }[]>([]);
+  const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([]);
+  
   const ringRef = useRef({ x: 0, y: 0 });
   const trailId = useRef(0);
+  const rippleId = useRef(0);
 
   useEffect(() => {
     const handleMouseMove = (e: MouseEvent) => {
@@ -27,8 +31,18 @@ export function Cursor() {
 
     const handleMouseEnter = () => setIsVisible(true);
     const handleMouseLeave = () => setIsVisible(false);
+    
+    // Handle click interactions
+    const handleMouseDown = (e: MouseEvent) => {
+      setIsClicked(true);
+      rippleId.current += 1;
+      setRipples(prev => [...prev, { x: e.clientX, y: e.clientY, id: rippleId.current }]);
+    };
+    const handleMouseUp = () => setIsClicked(false);
 
     window.addEventListener("mousemove", handleMouseMove);
+    window.addEventListener("mousedown", handleMouseDown);
+    window.addEventListener("mouseup", handleMouseUp);
     document.addEventListener("mouseenter", handleMouseEnter);
     document.addEventListener("mouseleave", handleMouseLeave);
 
@@ -45,6 +59,8 @@ export function Cursor() {
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
+      window.removeEventListener("mousedown", handleMouseDown);
+      window.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mouseenter", handleMouseEnter);
       document.removeEventListener("mouseleave", handleMouseLeave);
       clearInterval(interval);
@@ -71,12 +87,44 @@ export function Cursor() {
     return () => clearInterval(cleanup);
   }, []);
 
+  // Clean up old ripples after animation finishes
+  useEffect(() => {
+    if (ripples.length > 0) {
+      const timeout = setTimeout(() => {
+        setRipples(prev => prev.slice(1));
+      }, 600); // slightly longer than the ripple animation duration
+      return () => clearTimeout(timeout);
+    }
+  }, [ripples]);
+
   if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
     return null;
   }
 
   return (
     <>
+      {/* Click Ripple Shockwaves */}
+      <AnimatePresence>
+        {ripples.map((ripple) => (
+          <motion.div
+            key={`ripple-${ripple.id}`}
+            className="fixed pointer-events-none z-[9995]"
+            style={{
+              left: ripple.x - 20,
+              top: ripple.y - 20,
+              width: 40,
+              height: 40,
+              border: "2px solid var(--accent)",
+              borderRadius: "50%",
+            }}
+            initial={{ scale: 0, opacity: 0.8, borderWidth: "4px" }}
+            animate={{ scale: 3.5, opacity: 0, borderWidth: "0px" }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          />
+        ))}
+      </AnimatePresence>
+
       {/* Trail effect */}
       {trail.map((point, i) => (
         <motion.div
@@ -109,7 +157,7 @@ export function Cursor() {
           boxShadow: "0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow)",
         }}
         animate={{
-          scale: isHovering ? 2 : 1,
+          scale: isClicked ? 0.5 : (isHovering ? 2 : 1),
           opacity: isVisible ? 1 : 0,
         }}
         transition={{ duration: 0.15 }}
@@ -128,14 +176,14 @@ export function Cursor() {
           backgroundColor: isHovering ? "var(--accent-dim)" : "transparent",
         }}
         animate={{
-          scale: isHovering ? 1.5 : 1,
+          scale: isClicked ? 0.8 : (isHovering ? 1.5 : 1),
           opacity: isVisible ? 0.6 : 0,
         }}
         transition={{ duration: 0.2 }}
       />
 
       {/* Hover glow */}
-      {isHovering && (
+      {isHovering && !isClicked && (
         <motion.div
           className="fixed pointer-events-none z-[9997]"
           style={{
