@@ -4,6 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export function Cursor() {
+  const [isTouchDevice, setIsTouchDevice] = useState(false);
   const [mousePos, setMousePos] = useState({ x: 0, y: 0 });
   const [ringPos, setRingPos] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
@@ -11,33 +12,39 @@ export function Cursor() {
   const [isClicked, setIsClicked] = useState(false);
   const [trail, setTrail] = useState<{ x: number; y: number; id: number }[]>([]);
   const [ripples, setRipples] = useState<{ x: number; y: number; id: number }[]>([]);
-  
+
   const ringRef = useRef({ x: 0, y: 0 });
   const trailId = useRef(0);
   const rippleId = useRef(0);
+  const mousePosRef = useRef({ x: 0, y: 0 });
 
   useEffect(() => {
+    setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
+  }, []);
+
+  useEffect(() => {
+    if (isTouchDevice) return;
+
     const handleMouseMove = (e: MouseEvent) => {
+      mousePosRef.current = { x: e.clientX, y: e.clientY };
       setMousePos({ x: e.clientX, y: e.clientY });
       setIsVisible(true);
-      
-      // Add trail point
+
       trailId.current += 1;
-      setTrail(prev => [
-        ...prev.slice(-8),
-        { x: e.clientX, y: e.clientY, id: trailId.current }
-      ]);
+      const id = trailId.current;
+      setTrail(prev => [...prev.slice(-8), { x: e.clientX, y: e.clientY, id }]);
     };
 
     const handleMouseEnter = () => setIsVisible(true);
     const handleMouseLeave = () => setIsVisible(false);
-    
-    // Handle click interactions
+
     const handleMouseDown = (e: MouseEvent) => {
       setIsClicked(true);
       rippleId.current += 1;
-      setRipples(prev => [...prev, { x: e.clientX, y: e.clientY, id: rippleId.current }]);
+      const id = rippleId.current;
+      setRipples(prev => [...prev, { x: e.clientX, y: e.clientY, id }]);
     };
+
     const handleMouseUp = () => setIsClicked(false);
 
     window.addEventListener("mousemove", handleMouseMove);
@@ -46,64 +53,76 @@ export function Cursor() {
     document.addEventListener("mouseenter", handleMouseEnter);
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    // Check for hoverable elements
-    const checkHover = () => {
-      const hoveredEl = document.elementFromPoint(mousePos.x, mousePos.y);
-      const isHoverable =
-        hoveredEl?.matches("a, button, [role='button'], input, textarea, select, [data-hover]") ||
-        hoveredEl?.closest("a, button, [role='button']");
-      setIsHovering(!!isHoverable);
-    };
-
-    const interval = setInterval(checkHover, 50);
-
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
       window.removeEventListener("mousedown", handleMouseDown);
       window.removeEventListener("mouseup", handleMouseUp);
       document.removeEventListener("mouseenter", handleMouseEnter);
       document.removeEventListener("mouseleave", handleMouseLeave);
-      clearInterval(interval);
     };
-  }, [mousePos.x, mousePos.y]);
+  }, [isTouchDevice]);
 
-  // Lerp ring position
+  // Hover detection
   useEffect(() => {
+    if (isTouchDevice) return;
+
+    const interval = setInterval(() => {
+      const { x, y } = mousePosRef.current;
+      const hoveredEl = document.elementFromPoint(x, y);
+      const isHoverable =
+        hoveredEl?.matches("a, button, [role='button'], input, textarea, select, [data-hover]") ||
+        !!hoveredEl?.closest("a, button, [role='button']");
+      setIsHovering(isHoverable);
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, [isTouchDevice]);
+
+  // Lerp ring — cancelled flag prevents stale loops from Strict Mode double-invoke
+  useEffect(() => {
+    if (isTouchDevice) return;
+
+    let rafId: number;
+    let cancelled = false;
+
     const animate = () => {
-      ringRef.current.x += (mousePos.x - ringRef.current.x) * 0.12;
-      ringRef.current.y += (mousePos.y - ringRef.current.y) * 0.12;
+      if (cancelled) return;
+      ringRef.current.x += (mousePosRef.current.x - ringRef.current.x) * 0.12;
+      ringRef.current.y += (mousePosRef.current.y - ringRef.current.y) * 0.12;
       setRingPos({ x: ringRef.current.x, y: ringRef.current.y });
-      requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
     };
-    const animationId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationId);
-  }, [mousePos]);
 
-  // Clean up old trail points
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+    };
+  }, [isTouchDevice]);
+
+  // Trail cleanup
   useEffect(() => {
+    if (isTouchDevice) return;
     const cleanup = setInterval(() => {
       setTrail(prev => prev.slice(-6));
     }, 100);
     return () => clearInterval(cleanup);
-  }, []);
+  }, [isTouchDevice]);
 
-  // Clean up old ripples after animation finishes
+  // Ripple cleanup
   useEffect(() => {
-    if (ripples.length > 0) {
-      const timeout = setTimeout(() => {
-        setRipples(prev => prev.slice(1));
-      }, 600); // slightly longer than the ripple animation duration
-      return () => clearTimeout(timeout);
-    }
+    if (ripples.length === 0) return;
+    const timeout = setTimeout(() => {
+      setRipples(prev => prev.slice(1));
+    }, 600);
+    return () => clearTimeout(timeout);
   }, [ripples]);
 
-  if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
-    return null;
-  }
+  if (isTouchDevice) return null;
 
   return (
     <>
-      {/* Click Ripple Shockwaves */}
       <AnimatePresence>
         {ripples.map((ripple) => (
           <motion.div
@@ -125,7 +144,6 @@ export function Cursor() {
         ))}
       </AnimatePresence>
 
-      {/* Trail effect */}
       {trail.map((point, i) => (
         <motion.div
           key={point.id}
@@ -144,7 +162,6 @@ export function Cursor() {
         />
       ))}
 
-      {/* Inner dot */}
       <motion.div
         className="fixed pointer-events-none z-[9999]"
         style={{
@@ -157,13 +174,12 @@ export function Cursor() {
           boxShadow: "0 0 10px var(--accent-glow), 0 0 20px var(--accent-glow)",
         }}
         animate={{
-          scale: isClicked ? 0.5 : (isHovering ? 2 : 1),
+          scale: isClicked ? 0.5 : isHovering ? 2 : 1,
           opacity: isVisible ? 1 : 0,
         }}
         transition={{ duration: 0.15 }}
       />
 
-      {/* Outer ring */}
       <motion.div
         className="fixed pointer-events-none z-[9998]"
         style={{
@@ -176,13 +192,12 @@ export function Cursor() {
           backgroundColor: isHovering ? "var(--accent-dim)" : "transparent",
         }}
         animate={{
-          scale: isClicked ? 0.8 : (isHovering ? 1.5 : 1),
+          scale: isClicked ? 0.8 : isHovering ? 1.5 : 1,
           opacity: isVisible ? 0.6 : 0,
         }}
         transition={{ duration: 0.2 }}
       />
 
-      {/* Hover glow */}
       {isHovering && !isClicked && (
         <motion.div
           className="fixed pointer-events-none z-[9997]"
