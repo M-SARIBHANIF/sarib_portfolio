@@ -1,7 +1,8 @@
 "use client";
 
-import { useState, useEffect, type FormEvent, type ReactNode } from "react";
+import { useState, useEffect, useRef, type FormEvent, type ReactNode } from "react";
 import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { Turnstile, type TurnstileInstance } from "@marsidev/react-turnstile";
 import { RevealWrapper } from "./RevealWrapper";
 
 type SocialButton = {
@@ -52,6 +53,8 @@ export function Contact() {
   const [formStatus, setFormStatus] = useState<string | null>(null);
   const [form, setForm] = useState({ name: "", email: "", subject: "", message: "" });
   const [copiedEmail, setCopiedEmail] = useState(false);
+  const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const turnstileRef = useRef<TurnstileInstance>(null);
 
   const WORD_LIMIT = 250;
   const [errors, setErrors] = useState<{ name?: string; email?: string; subject?: string; message?: string }>({});
@@ -69,6 +72,17 @@ export function Contact() {
       }
     };
   }, []);
+
+  // Reset turnstile token and form state when modal closes
+  useEffect(() => {
+    if (!showForm) {
+      setTurnstileToken(null);
+      setFormStatus(null);
+      setSubmitAttempt(false);
+      setErrors({});
+      turnstileRef.current?.reset();
+    }
+  }, [showForm]);
 
   const copyEmail = () => {
     navigator.clipboard.writeText(contactData.email);
@@ -101,12 +115,18 @@ export function Contact() {
     setSubmitAttempt(true);
     const valid = validateForm();
     if (!valid) return;
+
+    if (!turnstileToken) {
+      setFormStatus("Please complete the CAPTCHA verification");
+      return;
+    }
+
     setSending(true);
     try {
       const res = await fetch("/api/contact", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(form),
+        body: JSON.stringify({ ...form, turnstileToken }),
       });
       const data = await res.json();
       if (res.ok) {
@@ -115,9 +135,15 @@ export function Contact() {
         setTimeout(() => setShowForm(false), 1200);
       } else {
         setFormStatus(data?.error || "Failed to send message");
+        // Reset turnstile so user can retry
+        turnstileRef.current?.reset();
+        setTurnstileToken(null);
       }
     } catch {
       setFormStatus("Failed to send message");
+      // Reset turnstile so user can retry
+      turnstileRef.current?.reset();
+      setTurnstileToken(null);
     } finally {
       setSending(false);
     }
@@ -145,7 +171,6 @@ export function Contact() {
   return (
     <section id="contact" className="py-16 px-6 md:px-10 lg:px-14 bg-[var(--bg)] w-full">
       <RevealWrapper>
-        {/* Changed max-w-3xl to w-full max-w-4xl to give it more room */}
         <div className="w-full max-w-4xl">
           {/* Section Header */}
           <div className="section-header mb-8">
@@ -156,7 +181,6 @@ export function Contact() {
 
           {/* Terminal Code Block */}
           <motion.div
-            /* Changed max-w-md to w-full */
             className="terminal-window w-full mb-8"
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -240,7 +264,7 @@ export function Contact() {
             <div className="flex items-center justify-between px-4 py-2 bg-[var(--bg3)] border-t border-[var(--border)] text-xs font-mono">
               <div className="flex items-center gap-2 text-[var(--text3)]">
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 16 16">
-                  <path d="M11.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122V6A2.5 2.5 0 0110 8.5H6a1 1 0 00-1 1v1.128a2.251 2.251 0 11-1.5 0V5.372a2.25 2.25 0 111.5 0v1.836A2.492 2.492 0 016 7h4a1 1 0 001-1v-.628A2.25 2.25 0 019.5 3.25zM4.25 12a.75.75 0 100 1.5.75.75 0 000-1.5zM3.5 3.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0z"/>
+                  <path d="M11.75 2.5a.75.75 0 100 1.5.75.75 0 000-1.5zm-2.25.75a2.25 2.25 0 113 2.122V6A2.5 2.5 0 0110 8.5H6a1 1 0 00-1 1v1.128a2.251 2.251 0 11-1.5 0V5.372a2.25 2.25 0 111.5 0v1.836A2.492 2.492 0 016 7h4a1 1 0 001-1v-.628A2.25 2.25 0 019.5 3.25zM4.25 12a.75.75 0 100 1.5.75.75 0 000-1.5zM3.5 3.25a.75.75 0 111.5 0 .75.75 0 01-1.5 0z" />
                 </svg>
                 main
               </div>
@@ -341,6 +365,21 @@ export function Contact() {
                     {errors.message && <div className="text-xs text-red-400 mt-1">{errors.message}</div>}
                   </motion.div>
 
+                  {/* Turnstile Widget */}
+                  <motion.div variants={itemVariants} className="flex justify-center">
+                    <Turnstile
+                      ref={turnstileRef}
+                      siteKey={process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!}
+                      onSuccess={(token) => {
+                        setTurnstileToken(token);
+                        setFormStatus(null);
+                      }}
+                      onExpire={() => setTurnstileToken(null)}
+                      onError={() => setTurnstileToken(null)}
+                      options={{ theme: "dark" }}
+                    />
+                  </motion.div>
+
                   <motion.div variants={itemVariants} className="flex items-center justify-between pt-2">
                     <button
                       type="button"
@@ -351,8 +390,8 @@ export function Contact() {
                     </button>
                     <button
                       type="submit"
-                      disabled={sending}
-                      className="px-6 py-2.5 bg-[var(--cyan)] text-[var(--bg)] rounded-lg font-medium hover:opacity-90 disabled:opacity-50 transition-opacity"
+                      disabled={sending || !turnstileToken}
+                      className="px-6 py-2.5 bg-[var(--cyan)] text-[var(--bg)] rounded-lg font-medium hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
                     >
                       {sending ? "Sending..." : "Send Message"}
                     </button>

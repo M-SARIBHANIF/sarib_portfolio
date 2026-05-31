@@ -25,6 +25,7 @@
   "vars": {
     "SMTP_HOST": "smtp.gmail.com",
     "SMTP_PORT": "465",
-    "SMTP_USER": "saribraja1998@gmail.com"
+    "SMTP_USER": "saribraja1998@gmail.com",
+    "NEXT_PUBLIC_TURNSTILE_SITE_KEY":"0x4AAAAAADbpU9Hx9moitTCU"
   }
 }
