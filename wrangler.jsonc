@@ -21,5 +21,10 @@
   },
   "observability": {
     "enabled": true
+  },
+  "vars": {
+    "SMTP_HOST": "smtp.gmail.com",
+    "SMTP_PORT": "465",
+    "SMTP_USER": "saribraja1998@gmail.com"
   }
 }
