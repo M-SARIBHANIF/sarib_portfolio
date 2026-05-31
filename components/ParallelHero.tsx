@@ -7,6 +7,7 @@ const roles = [
   "API Architect",
   "DevOps Engineer",
   "Backend Specialist",
+  "UI/UX Designer",
 ];
 
 const navItems = [
@@ -93,12 +94,12 @@ export function ParallelHero() {
 
         {/* Description */}
         <p className="text-[var(--text2)] leading-relaxed mb-4 max-w-sm text-sm">
-          I build reliable systems through automation, infrastructure thinking, and deep technical ownership.
+          I turn ideas into products — from database schema to deployment pipeline.
         </p>
 
         {/* Comment line */}
         <p className="font-mono text-xs text-[var(--text3)] mb-8">
-          // turning coffee into code since 2020
+          // turning Pure Will into code since 2020
         </p>
 
         {/* CTA Button */}

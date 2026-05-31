@@ -18,7 +18,7 @@ const skillsData = [
     skills: [
       { name: "Playwright", level: 90 },
       { name: "API Testing (REST)", level: 90 },
-      { name: "Pytest", level: 85 },
+      { name: "Cypress", level: 85 },
       { name: "Selenium", level: 75 },
     ],
   },
@@ -35,7 +35,7 @@ const skillsData = [
     category: "Frameworks",
     skills: [
       { name: "FastAPI", level: 85 },
-      { name: "Next.js", level: 75 },
+      { name: "RestAPI", level: 75 },
       { name: "React", level: 70 },
       { name: "Node.js", level: 70 },
     ],

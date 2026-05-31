@@ -36,7 +36,6 @@ export function Footer() {
             <span className="text-[var(--purple)]">◆</span>
             <span className="text-[var(--purple)]">feat:</span>
             <span className="text-[var(--text2)]">launched portfolio v1.0</span>
-            <span className="text-[var(--text3)]">1 day ago</span>
           </div>
           <div className="flex items-center gap-2 text-sm font-mono">
             <span className="text-[var(--amber)]">{"</>"}</span>
@@ -46,7 +45,7 @@ export function Footer() {
           <div className="flex items-center gap-2 text-sm font-mono">
             <span className="text-[var(--red)]">☕</span>
             <span className="text-[var(--red)]">fuel:</span>
-            <span className="text-[var(--text2)]">V60 pour-over, late night sessions</span>
+            <span className="text-[var(--text2)]">Calm, late night coding sessions</span>
           </div>
         </motion.div>
 
@@ -59,7 +58,7 @@ export function Footer() {
         >
           Designed in <span className="text-[var(--text)] font-medium">Figma</span>, 
           coded in <span className="text-[var(--text)] font-medium">VS Code</span>, 
-          deployed on <span className="text-[var(--text)] font-medium">Vercel</span>.
+          deployed on <span className="text-[var(--text)] font-medium">Cloudflare</span>.
         </motion.p>
 
         {/* Bottom Row */}

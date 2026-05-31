@@ -13,25 +13,25 @@ const projects = [
     featured: true,
   },
   {
-    title: "AI URL Verification App",
-    description:
-      "FastAPI application integrating OpenAI and Perplexity APIs for intelligent URL verification and content analysis. Built with clean architecture and comprehensive test coverage.",
-    technologies: ["Python", "FastAPI", "OpenAI API", "Perplexity API", "REST"],
-    featured: true,
+  title: "Real-Time Sign Language Detection System",
+  description:
+    "End-to-end computer vision system that detects and classifies sign language gestures in real-time. Built with MediaPipe for hand landmark extraction, a TensorFlow classification model on the backend, and a live React frontend consuming predictions over WebSockets.",
+  technologies: ["Python", "TensorFlow", "MediaPipe", "FastAPI", "WebSockets", "React"],
+  featured: true,
   },
   {
-    title: "Agile PM Dashboard",
-    description:
-      "A comprehensive project management tool with real-time collaboration, sprint planning, and analytics dashboard. Built with React, Node.js, and PostgreSQL.",
-    technologies: ["React", "Node.js", "PostgreSQL", "Socket.io", "Docker"],
-    featured: false,
+  title: "Agile Project Management Dashboard",
+  description:
+    "Azure DevOps-inspired project management system built across two surfaces — a standalone React app for external dashboards and a custom OWL component embedded inside Odoo. FastAPI powers the backend with PostgreSQL handling sprint data, task tracking, and team workflows.",
+  technologies: ["React", "OWL", "FastAPI", "PostgreSQL", "Odoo", "Docker"],
+  featured: false,
   },
   {
-    title: "DIY Robotic Arm Project",
-    description:
-      "Ongoing project designing a robotic arm using 3D-printed and CNC parts. Combines software control systems with real-world hardware, bridging digital and physical systems.",
-    technologies: ["Robotics", "CAD", "3D Printing", "Motor Control", "Embedded Systems"],
-    featured: false,
+  title: "Amazon-Inspired E-Commerce Platform",
+  description:
+    "Full-scale e-commerce platform designed in Figma and built end-to-end with a React frontend, Node.js backend, and PostgreSQL database. Features JWT authentication, payment integration, dynamic product filtering, cart state management, and an admin control panel.",
+  technologies: ["React", "Node.js", "PostgreSQL", "JWT", "Figma", "Express.js"],
+  featured: false,
   },
 ];
 

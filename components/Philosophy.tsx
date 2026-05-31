@@ -6,35 +6,32 @@ import { RevealWrapper } from "./RevealWrapper";
 
 const philosophies = [
   {
-    title: "Precision Over Speed",
+    title: "Progressive Overload",
     description:
-      "I've been shooting since age 6. At 16, I hit a matchstick from 150 feet with open sights, no support. That kind of discipline — patience, control, focus — carries into how I approach engineering.",
+      "In the gym, you don't max out on day one — you add weight when the form is right. I approach codebases the same way. Nail the fundamentals first, refactor when stable, scale when ready. Shortcuts in reps and shortcuts in code both lead to injury.",
     color: "#d4a855",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-        <circle cx="12" cy="12" r="10" />
-        <circle cx="12" cy="12" r="6" />
-        <circle cx="12" cy="12" r="2" />
+        <path d="M6 4v16M18 4v16M3 8h4M17 8h4M3 16h4M17 16h4M7 12h10" />
       </svg>
     ),
   },
   {
-    title: "Systems Thinking",
+    title: "Read the Fight",
     description:
-      "I don't just test features; I trace problems to their source. Understanding how components interact, where failures cascade, and how to build resilient architectures.",
+      "A good boxer doesn't just throw punches — they read patterns, anticipate counters, and control the ring. I approach systems the same way. I don't just fix the bug in front of me; I trace where the breakdown started, how it cascaded, and what needs to change so it doesn't land again.",
     color: "#6b8afd",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-        <path d="M12 2L2 7l10 5 10-5-10-5z" />
-        <path d="M2 17l10 5 10-5" />
-        <path d="M2 12l10 5 10-5" />
+        <path d="M12 4c-1.5 0-3 .5-4 1.5L4 9c-1 1-1 2.5 0 3.5l1 1c.5.5 1 .5 1.5.5H7l4 4h2l5-5c1-1 1-2.5 0-3.5L15 6c-1-1-2-2-3-2z" />
+        <path d="M9 9l3 3" />
       </svg>
     ),
   },
   {
     title: "Ownership & Trust",
     description:
-      "The best teams treat QA as engineering, not gatekeeping. I take ownership of the systems I work on — from test strategy to infrastructure to shipping reliable code.",
+      "I don't hand off problems at the layer boundary. If something breaks in production, I don't ask whether it's a frontend issue or a backend issue — I just fix it. Full stack means full responsibility.",
     color: "#4ade80",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
@@ -45,15 +42,13 @@ const philosophies = [
   {
     title: "Clean & Efficient",
     description:
-      "I run Fedora because Windows is bloated. I brew V60 pour-over because instant coffee is lazy. I write clean code because complexity is a liability.",
+      "In boxing, a clean straight punch beats a wild haymaker every time. In the gym, perfect form beats ego-lifting. In code, a simple solution beats a clever one. I cut the fat — in my training and in my systems.",
     color: "#f472b6",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-5 h-5">
-        <path d="M17 8h1a4 4 0 1 1 0 8h-1" />
-        <path d="M3 8h14v9a4 4 0 0 1-4 4H7a4 4 0 0 1-4-4V8z" />
-        <line x1="6" y1="2" x2="6" y2="4" />
-        <line x1="10" y1="2" x2="10" y2="4" />
-        <line x1="14" y1="2" x2="14" y2="4" />
+        <path d="M20 12V7a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2v10a2 2 0 0 0 2 2h7" />
+        <path d="M15 17h6M18 14v6" />
+        <path d="M6 9h8M6 13h5" />
       </svg>
     ),
   },
@@ -75,7 +70,7 @@ export function Philosophy() {
 
           {/* Intro Text */}
           <p className="text-[var(--text2)] mb-6 max-w-2xl text-sm">
-            Quality isn&apos;t a phase in the pipeline — it&apos;s a mindset that runs through everything I build.
+            Good software isn&apos;t rushed into production — it&apos;s thought through, built clean, and shipped with confidence.
           </p>
 
           {/* Cards Grid - 2x2 */}

@@ -14,12 +14,14 @@ const experiences = [
     url: "https://cymaxtech.com/",
     color: "#d4a855",
     description: [
-      "Led development of enterprise-grade web applications using React and Node.js",
-      "Implemented microservices architecture improving system scalability by 40%",
-      "Established CI/CD pipelines reducing deployment time by 60%",
+      "Built and maintained full stack features across React frontends and Node.js APIs — owning the full request lifecycle from UI to database",
+      "Developed custom Odoo modules including a project management system inspired by Azure DevOps — with sprints, task tracking, Detailed Dashboards and team workflows, improving team productivity by 60%",
+      "Extended Odoo's accounting layer with custom configurations, reporting logic, and business-specific and financial workflows, improving financial reporting accuracy and efficiency by 75%",
+      "Designed and consumed RESTful APIs in Node.js to bridge Odoo's backend with React frontends, keeping systems in sync across the stack",
       "Mentored junior developers on best practices and code review standards",
     ],
-    technologies: ["React", "Node.js", "Docker", "PostgreSQL", "AWS"],
+    
+    technologies: ["React", "Node.js", "Docker", "PostgreSQL", "AWS", "Odoo(OWL)", "Redis"],
   },
   {
     company: "Horizon Tech Services",
@@ -29,11 +31,12 @@ const experiences = [
     url: "https://www.horizon.com.pk/",
     color: "#6b8afd",
     description: [
-      "Developed RESTful APIs for client applications using FastAPI",
-      "Optimized database queries improving response times by 75%",
-      "Implemented authentication and authorization systems",
+      "Built a full-stack Laboratory Information Management System (LIMS) end-to-end — owning everything from MongoDB schema design to React frontend, digitizing complete lab operations",
+      "Engineered a responsive React frontend for lab workflows — sample intake forms, test result dashboards, and report generation — consuming Laravel RESTful APIs",
+      "Architected a Laravel (PHP) REST API layer handling sample tracking, test workflows, and lab report generation with clean separation of business logic",
+      "Modeled MongoDB collections for complex lab entities — samples, tests, results, and audit trails — optimized for read-heavy reporting and high-volume scientific records",
     ],
-    technologies: ["FastAPI", "Python", "MongoDB", "Redis"],
+    technologies: ["RestAPI", "Laravell(PHP)", "MongoDB", "Figma"],
   },
   {
     company: "LCC Pakistan",

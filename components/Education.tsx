@@ -10,9 +10,7 @@ const educationData = {
   url: "https://au.edu.pk",
   achievements: [
     "As my final year project, I worked on a Satellite Imagery Poverty Assessment System using Deep Learning, achieving 85% accuracy in poverty prediction.",
-    "Part of Microsoft Learn Student Ambassador Program, where I organized workshops and events to promote Microsoft technologies among students.",
     "Part of the core team (Think Tank) of the first-ever coding bootcamp at Air University, Code Air 1.0.",
-    "Ambassador for the NaSCon arranged in NUCES FAST, registering 85+ students from Air University.",
   ],
   courses: [
     "OOP",
