@@ -3,14 +3,14 @@
 import { motion } from "framer-motion";
 import { RevealWrapper } from "./RevealWrapper";
 
-// Simulated contribution graph data
+// Deterministic contribution data — same on server and client
 const generateContributionData = () => {
   const data = [];
   for (let week = 0; week < 52; week++) {
     const weekData = [];
     for (let day = 0; day < 7; day++) {
-      // Random contribution level 0-4
-      weekData.push(Math.floor(Math.random() * 5));
+      const seed = Math.sin(week * 7 + day + 1) * 10000;
+      weekData.push(Math.floor((seed - Math.floor(seed)) * 5));
     }
     data.push(weekData);
   }
@@ -28,7 +28,8 @@ const tools = [
 const hobbies = [
   {
     title: "Boxing",
-    description: "Training boxer. I appreciate the discipline — footwork, combinations, reading your opponent. The ring teaches patience better than anything.",
+    description:
+      "Training boxer. I appreciate the discipline — footwork, combinations, reading your opponent. The ring teaches patience better than anything.",
     code: "while(!knockout) { jab(); cross(); slip(); }",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
@@ -39,7 +40,8 @@ const hobbies = [
   },
   {
     title: "Gym",
-    description: "Consistent lifter. Progressive overload, clean form, no shortcuts. The same principles I bring to writing code — show up, do the work, trust the process.",
+    description:
+      "Consistent lifter. Progressive overload, clean form, no shortcuts. The same principles I bring to writing code — show up, do the work, trust the process.",
     code: "lift({ weight: pr, form: 'strict', ego: false })",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
@@ -49,7 +51,8 @@ const hobbies = [
   },
   {
     title: "Building",
-    description: "I build things outside of work too. Building a full e-commerce platform inspired by Amazon — Figma to design, React frontend, Node backend, PostgreSQL underneath.",
+    description:
+      "I build things outside of work too. Building a full e-commerce platform inspired by Amazon — Figma to design, React frontend, Node backend, PostgreSQL underneath.",
     code: "deploy({ stack: 'PERN', status: 'shipping...' })",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="w-6 h-6">
@@ -60,12 +63,13 @@ const hobbies = [
   },
 ];
 
+// Uses bg-color/opacity syntax — single atomic class, no floating opacity utility
 const getContributionColor = (level: number) => {
   switch (level) {
     case 0: return "bg-[var(--bg3)]";
-    case 1: return "bg-[var(--cyan)] opacity-20";
-    case 2: return "bg-[var(--cyan)] opacity-40";
-    case 3: return "bg-[var(--cyan)] opacity-60";
+    case 1: return "bg-[var(--cyan)]/20";
+    case 2: return "bg-[var(--cyan)]/40";
+    case 3: return "bg-[var(--cyan)]/60";
     case 4: return "bg-[var(--cyan)]";
     default: return "bg-[var(--bg3)]";
   }
@@ -90,7 +94,6 @@ export function BeyondTerminal() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            {/* Git command header */}
             <div className="flex items-center justify-between mb-4">
               <span className="font-mono text-sm text-[var(--text2)]">
                 <span className="text-[var(--cyan)]">$</span> git log --oneline | head -365
@@ -100,9 +103,8 @@ export function BeyondTerminal() {
               </span>
             </div>
 
-            {/* Contribution Grid */}
             <div className="overflow-x-auto pb-2">
-              <div className="flex gap-1 min-w-fit">
+              <div className="flex flex-row gap-1 min-w-fit">
                 {contributionData.map((week, weekIndex) => (
                   <div key={weekIndex} className="flex flex-col gap-1">
                     {week.map((day, dayIndex) => (
@@ -120,10 +122,9 @@ export function BeyondTerminal() {
               </div>
             </div>
 
-            {/* Legend */}
             <div className="flex items-center justify-end gap-2 mt-4">
               <span className="text-xs text-[var(--text3)]">Less</span>
-              <div className="flex gap-1">
+              <div className="flex flex-row gap-1">
                 {[0, 1, 2, 3, 4].map((level) => (
                   <div
                     key={level}
@@ -164,28 +165,22 @@ export function BeyondTerminal() {
                 viewport={{ once: true }}
                 transition={{ delay: index * 0.1 }}
               >
-                {/* Icon */}
                 <div className="card-icon group-hover:scale-110 transition-transform">
                   {hobby.icon}
                 </div>
-
-                {/* Title */}
                 <h3 className="text-base font-semibold text-[var(--text)] mb-2 group-hover:text-[var(--cyan)] transition-colors">
                   {hobby.title}
                 </h3>
-
-                {/* Description */}
                 <p className="text-sm text-[var(--text2)] leading-relaxed mb-4">
                   {hobby.description}
                 </p>
-
-                {/* Code snippet */}
                 <div className="font-mono text-xs text-[var(--cyan)] bg-[var(--bg3)] px-3 py-2 rounded-md">
                   {hobby.code}
                 </div>
               </motion.div>
             ))}
           </div>
+
         </div>
       </RevealWrapper>
     </section>
