@@ -18,7 +18,6 @@ export function Cursor() {
   const rippleId = useRef(0);
   const mousePosRef = useRef({ x: 0, y: 0 });
 
-  // Detect touch device after mount — safe, no SSR mismatch
   useEffect(() => {
     setIsTouchDevice(window.matchMedia("(pointer: coarse)").matches);
   }, []);
@@ -63,7 +62,7 @@ export function Cursor() {
     };
   }, [isTouchDevice]);
 
-  // Hover detection — uses ref so doesn't need mousePos as dependency
+  // Hover detection
   useEffect(() => {
     if (isTouchDevice) return;
 
@@ -79,19 +78,28 @@ export function Cursor() {
     return () => clearInterval(interval);
   }, [isTouchDevice]);
 
-  // Lerp ring position
+  // Lerp ring — cancelled flag prevents stale loops from Strict Mode double-invoke
   useEffect(() => {
     if (isTouchDevice) return;
 
+    let rafId: number;
+    let cancelled = false;
+
     const animate = () => {
-      ringRef.current.x += (mousePos.x - ringRef.current.x) * 0.12;
-      ringRef.current.y += (mousePos.y - ringRef.current.y) * 0.12;
+      if (cancelled) return;
+      ringRef.current.x += (mousePosRef.current.x - ringRef.current.x) * 0.12;
+      ringRef.current.y += (mousePosRef.current.y - ringRef.current.y) * 0.12;
       setRingPos({ x: ringRef.current.x, y: ringRef.current.y });
-      requestAnimationFrame(animate);
+      rafId = requestAnimationFrame(animate);
     };
-    const animationId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animationId);
-  }, [mousePos, isTouchDevice]);
+
+    rafId = requestAnimationFrame(animate);
+
+    return () => {
+      cancelled = true;
+      cancelAnimationFrame(rafId);
+    };
+  }, [isTouchDevice]);
 
   // Trail cleanup
   useEffect(() => {
@@ -111,12 +119,10 @@ export function Cursor() {
     return () => clearTimeout(timeout);
   }, [ripples]);
 
-  // Render nothing on touch devices or until mounted
   if (isTouchDevice) return null;
 
   return (
     <>
-      {/* Click Ripple Shockwaves */}
       <AnimatePresence>
         {ripples.map((ripple) => (
           <motion.div
@@ -138,7 +144,6 @@ export function Cursor() {
         ))}
       </AnimatePresence>
 
-      {/* Trail */}
       {trail.map((point, i) => (
         <motion.div
           key={point.id}
@@ -157,7 +162,6 @@ export function Cursor() {
         />
       ))}
 
-      {/* Inner dot */}
       <motion.div
         className="fixed pointer-events-none z-[9999]"
         style={{
@@ -176,7 +180,6 @@ export function Cursor() {
         transition={{ duration: 0.15 }}
       />
 
-      {/* Outer ring */}
       <motion.div
         className="fixed pointer-events-none z-[9998]"
         style={{
@@ -195,7 +198,6 @@ export function Cursor() {
         transition={{ duration: 0.2 }}
       />
 
-      {/* Hover glow */}
       {isHovering && !isClicked && (
         <motion.div
           className="fixed pointer-events-none z-[9997]"
